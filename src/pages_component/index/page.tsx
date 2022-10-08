@@ -1,5 +1,6 @@
-import React from "react";
+import { NextPage } from "next";
 
-export const Index = () => {
-  return <div>Index</div>;
+/** @package */
+export const Index: NextPage = (props) => {
+  return <div>template</div>;
 };

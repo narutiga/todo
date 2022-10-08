@@ -1,7 +1,11 @@
-import type { NextPage } from "next";
+import type { CustomNextPage } from "next";
+import { Index } from "src/pages_component/index";
+import { Layout } from "src/pages_layout/Layout/Layout";
 
-const Home: NextPage = () => {
-  return <div>template</div>;
+const IndexPage: CustomNextPage = (props) => {
+  return <Index {...props} />;
 };
 
-export default Home;
+IndexPage.getLayout = Layout;
+
+export default IndexPage;
