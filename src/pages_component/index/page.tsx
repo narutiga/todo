@@ -1,9 +1,8 @@
 import { NextPage } from "next";
 import { useTodos } from "src/lib/hook/useTodos";
-import { Checkbox } from "@mantine/core";
 
 type Todo = {
-  id: number;
+  id: string;
   title: string;
   isDone: boolean;
   dueDate: string;
@@ -11,41 +10,66 @@ type Todo = {
 
 /** @package */
 export const Index: NextPage = (props) => {
-  const { state } = useTodos();
-  const todayTodos = state.filter((todo: Todo) => todo.dueDate === "today");
-  const tomorrowTodos = state.filter(
-    (todo: Todo) => todo.dueDate === "tomorrow"
-  );
-  const afterTodos = state.filter((todo: Todo) => todo.dueDate === "after");
+  const { state, handleComplete } = useTodos();
+  const todayTodos = state
+    ? state.filter((todo: Todo) => todo.dueDate === "today")
+    : null;
+  const tomorrowTodos = state
+    ? state.filter((todo: Todo) => todo.dueDate === "tomorrow")
+    : null;
+  const afterTodos = state
+    ? state.filter((todo: Todo) => todo.dueDate === "after")
+    : null;
 
   return (
-    <div className="w-full  flex">
-      <Todos array={todayTodos} title="今日する" />
-      <Todos array={tomorrowTodos} title="明日する" />
-      <Todos array={afterTodos} title="後でする" />
+    <div className="min-w-full flex">
+      <Todos
+        array={todayTodos}
+        title={<p className="text-2xl text-rose-500 font-semibold">今日する</p>}
+        handleComplete={handleComplete}
+      />
+      <Todos
+        array={tomorrowTodos}
+        title={
+          <p className="text-2xl text-orange-400 font-semibold">明日する</p>
+        }
+        handleComplete={handleComplete}
+      />
+      <Todos
+        array={afterTodos}
+        title={
+          <p className="text-2xl text-yellow-400 font-semibold">今度する</p>
+        }
+        handleComplete={handleComplete}
+      />
     </div>
   );
 };
 
 export const Todos = (props: any) => {
-  const { handleComplete } = useTodos();
-
   return (
-    <div>
-      <p>{props.title}</p>
-      <ul className="list-none">
+    <div className="w-1/3">
+      {props.title}
+      <ul className="list-none p-0">
         {props.array.map((todo: Todo) => (
-          <li key={todo.id} className="mb-6">
-            <Checkbox
-              label={props.title}
-              color="red"
-              radius="xl"
-              size="md"
-              checked={todo.isDone}
-              onChange={(e) => {
-                handleComplete(e);
-              }}
-            />
+          <li key={todo.id} className="mb-6 text-left">
+            <label
+              className={`text-xl ${
+                todo.isDone ? "text-gray-400 line-through" : "text-gray-900"
+              }`}
+            >
+              <input
+                className="mr-4"
+                id={todo.id}
+                type="checkbox"
+                value={todo.title}
+                checked={todo.isDone}
+                onChange={(e) => {
+                  props.handleComplete(e);
+                }}
+              />
+              {todo.title}
+            </label>
           </li>
         ))}
       </ul>
