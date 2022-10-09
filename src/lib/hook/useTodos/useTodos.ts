@@ -10,7 +10,12 @@ type Todo = {
 /** @package */
 export const useTodos = () => {
   const initialState = [
-    { id: "1", title: "テスト1", isDone: false, dueDate: "today" },
+    {
+      id: "1",
+      title: "テスト1文字が折り返したらどうなるかな？",
+      isDone: false,
+      dueDate: "today",
+    },
     { id: "2", title: "テスト2", isDone: false, dueDate: "today" },
     { id: "3", title: "テスト3", isDone: false, dueDate: "today" },
     { id: "4", title: "テスト4", isDone: false, dueDate: "tomorrow" },
@@ -24,7 +29,10 @@ export const useTodos = () => {
   const reducer = (state: any, action: any) => {
     switch (action.type) {
       case "add":
-        return [...state];
+        return [
+          ...state,
+          { id: "10", title: "追加のテスト", isDone: false, dueDate: "after" },
+        ];
       case "edit":
         return [...state];
       case "complete":
