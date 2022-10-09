@@ -1,1 +1,1 @@
-export { Index } from "./page";
+export { Auth } from "./page";
