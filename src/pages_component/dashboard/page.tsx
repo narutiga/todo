@@ -1,7 +1,11 @@
 import { Checkbox } from "@mantine/core";
 import { IconCirclePlus, IconTrash } from "@tabler/icons";
-import { NextPage } from "next";
+import type { NextPage } from "next";
+import { Spinner } from "src/component/Spinner";
+import { useMutateTodos } from "src/lib/hook/useMutateTodos";
+import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { useTodos } from "src/lib/hook/useTodos";
+import { useStore } from "src/lib/useStore";
 
 type Todo = {
   id: string;
@@ -12,15 +16,20 @@ type Todo = {
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
-  const { state, handleAdd, handleComplete } = useTodos();
-  const todayTodos = state
-    ? state.filter((todo: Todo) => todo.dueDate === "today")
+  const { createTodoMutation } = useMutateTodos();
+  const { data: todos, status } = useQueryTodos();
+  if (status === "loading") return <Spinner />;
+  if (status === "error") return <p>{"Error"}</p>;
+  console.log(todos);
+  // const { state, handleAdd, handleComplete } = useTodos();
+  const todayTodos = todos
+    ? todos.filter((todo: Todo) => todo.dueDate === "today")
     : [];
-  const tomorrowTodos = state
-    ? state.filter((todo: Todo) => todo.dueDate === "tomorrow")
+  const tomorrowTodos = todos
+    ? todos.filter((todo: Todo) => todo.dueDate === "tomorrow")
     : [];
-  const afterTodos = state
-    ? state.filter((todo: Todo) => todo.dueDate === "after")
+  const afterTodos = todos
+    ? todos.filter((todo: Todo) => todo.dueDate === "after")
     : [];
 
   return (
@@ -29,8 +38,8 @@ export const Dashboard: NextPage = (props) => {
         color="pink"
         array={todayTodos}
         title={<p className="text-xl text-rose-500 font-semibold">今日する</p>}
-        handleComplete={handleComplete}
-        handleAdd={handleAdd}
+        // handleComplete={handleComplete}
+        // handleAdd={handleAdd}
       />
       <Todos
         color="orange"
@@ -38,7 +47,7 @@ export const Dashboard: NextPage = (props) => {
         title={
           <p className="text-xl text-orange-400 font-semibold">明日する</p>
         }
-        handleComplete={handleComplete}
+        // handleComplete={handleComplete}
       />
       <Todos
         color="yellow"
@@ -46,26 +55,33 @@ export const Dashboard: NextPage = (props) => {
         title={
           <p className="text-xl text-yellow-400 font-semibold">今度する</p>
         }
-        handleComplete={handleComplete}
+        // handleComplete={handleComplete}
       />
     </div>
   );
 };
 
 export const Todos = (props: any) => {
+  const { editingTask } = useStore();
+  const update = useStore((state) => state.updateEditingTask);
+  const { createTodoMutation } = useMutateTodos();
+
   return (
     <div className="px-4 w-full lg:w-1/3">
       {props.title}
       <ul className="list-none p-0">
         {props.array.length === 0 ? (
           <li>
-            <form action="" method="" onSubmit={props.handleAdd}>
+            <form action="" method="" onSubmit={() => createTodoMutation}>
               <IconCirclePlus className="text-gray-400 align-middle" />
               <input
                 className="border-none focus:outline-none align-middle"
                 type="text"
                 placeholder="タスクを追加する"
-                required
+                value={editingTask.title}
+                onChange={(e) =>
+                  update({ ...editingTask, title: e.target.value })
+                }
               ></input>
             </form>
           </li>
