@@ -1,18 +1,11 @@
 import { FormEvent, useCallback } from "react";
 import type { NextPage } from "next";
 import { Spinner } from "src/component/Spinner";
-import { useStore } from "src/lib/hook/useStore";
+import { Task, useStore } from "src/lib/hook/useStore";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { Checkbox } from "@mantine/core";
 import { IconCirclePlus, IconTrash } from "@tabler/icons";
-
-type Todo = {
-  id: string;
-  title: string;
-  isDone: boolean;
-  dueDate: string;
-};
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
@@ -40,21 +33,23 @@ export const Dashboard: NextPage = (props) => {
   if (status === "loading") return <Spinner />;
   if (status === "error") return <p>{"Error"}</p>;
 
+  console.log(todos);
+
   const todayTodos = todos
-    ? todos.filter((todo: Todo) => todo.dueDate === "today")
+    ? todos.filter((todo: Task) => todo.dueDate === "today")
     : [];
   const tomorrowTodos = todos
-    ? todos.filter((todo: Todo) => todo.dueDate === "tomorrow")
+    ? todos.filter((todo: Task) => todo.dueDate === "tomorrow")
     : [];
   const afterTodos = todos
-    ? todos.filter((todo: Todo) => todo.dueDate === "after")
+    ? todos.filter((todo: Task) => todo.dueDate === "after")
     : [];
 
   return (
     <div className="min-w-full md:flex flex-row">
       <ul className="list-none p-0">
         {todayTodos.map((todo) => (
-          <Todos
+          <Todo
             color="pink"
             key={todo.id}
             id={todo.id}
@@ -65,7 +60,7 @@ export const Dashboard: NextPage = (props) => {
         ))}
         <li>
           <form action="" method="" onSubmit={handleSubmit}>
-            <IconCirclePlus className="text-gray-400 align-middle" />
+            <IconCirclePlus className="mr-1 text-gray-400 align-middle" />
             <input
               className="border-none focus:outline-none align-middle"
               type="text"
@@ -82,11 +77,9 @@ export const Dashboard: NextPage = (props) => {
   );
 };
 
-export const Todos = (props: any) => {
-  const { editingTask } = useStore();
+/** @package */
+export const Todo = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
-  const update = useStore((state) => state.updateEditingTask);
-  const toggleComplete = () => {};
 
   return (
     <li key={props.id} className="group mb-6 flex justify-between">
@@ -97,7 +90,9 @@ export const Todos = (props: any) => {
           color={props.color}
           className="mt-1 mr-2"
           checked={props.isDone}
-          onChange={toggleComplete}
+          onChange={() =>
+            completeTodoMutation.mutate({ id: props.id, isDone: !props.isDone })
+          }
         />
         <label
           className={`text-lg ${
