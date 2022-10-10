@@ -5,7 +5,7 @@ import { Task, useStore } from "src/lib/hook/useStore";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { Checkbox } from "@mantine/core";
-import { IconCirclePlus, IconTrash } from "@tabler/icons";
+import { IconCirclePlus, IconCopy, IconTrash } from "@tabler/icons";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
@@ -92,7 +92,7 @@ export const Todo = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
 
   return (
-    <li key={props.id} className="group mb-2 flex justify-between">
+    <li key={props.id} className="group mb-6 flex justify-between">
       <div className="flex">
         <Checkbox
           id={props.id}
@@ -112,9 +112,10 @@ export const Todo = (props: any) => {
           {props.title}
         </label>
       </div>
-      <div>
+      <div className="flex">
+        <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
         <IconTrash
-          className="items-end h-5 w-5 m-2 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
+          className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
           onClick={() => deleteTodoMutation.mutate({ id: props.id })}
         />
       </div>
