@@ -8,15 +8,19 @@ export const useMutateTodos = () => {
   const reset = useStore((state) => state.resetEditingTask);
 
   const createTodoMutation = useMutation(
-    async (todo: Omit<Task, "id" | "created_at" | "dueDate" | "user_id">) => {
-      const { data, error } = await supabase
-        .from("todos")
-        .insert({ ...todo, dueDate: "today" });
+    async (todo: Omit<Task, "id" | "created_at">) => {
+      const { data, error } = await supabase.from("todos").insert({ ...todo });
       if (error) throw new Error(error.message);
       return data;
     },
-
     {
+      onSuccess: (res) => {
+        const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
+        if (previousTodos) {
+          queryClient.setQueriesData(["todos"], [...previousTodos, res[0]]);
+        }
+        reset();
+      },
       onError: (err: any) => {
         alert(err.message);
         reset();
@@ -34,6 +38,16 @@ export const useMutateTodos = () => {
       return data;
     },
     {
+      onSuccess: (res) => {
+        const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
+        if (previousTodos) {
+          const newTodos = previousTodos.map((todo) =>
+            todo.id === res[0].id ? { ...todo, isDone: !res[0].isDone } : todo
+          );
+          queryClient.setQueriesData(["todos"], newTodos);
+        }
+        reset();
+      },
       onError: (err: any) => {
         alert(err.message);
         reset();
@@ -68,6 +82,15 @@ export const useMutateTodos = () => {
       return data;
     },
     {
+      onSuccess: (_, variables) => {
+        const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
+        if (previousTodos) {
+          queryClient.setQueryData(
+            ["todos"],
+            previousTodos.filter((todo) => todo.id !== variables.id)
+          );
+        }
+      },
       onError: (err: any) => {
         alert(err.message);
         reset();

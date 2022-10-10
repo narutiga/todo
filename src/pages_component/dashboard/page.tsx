@@ -6,6 +6,7 @@ import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { Checkbox } from "@mantine/core";
 import { IconCirclePlus, IconTrash } from "@tabler/icons";
+import { supabase } from "src/lib/util/supabase";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
@@ -46,14 +47,15 @@ export const Todos = (props: any) => {
       createTodoMutation.mutate({
         title: editingTask.title,
         isDone: false,
+        dueDate: "today",
+        user_id: supabase.auth.user()?.id,
       });
-      reset();
     },
     [editingTask]
   );
 
   return (
-    <div className="min-w-full md:flex flex-row">
+    <div className="min-w-full">
       {props.title}
       <ul className="list-none p-0">
         {props.todos.map((todo: Task) => (
