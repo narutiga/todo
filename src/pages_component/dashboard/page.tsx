@@ -1,11 +1,11 @@
-import { Checkbox } from "@mantine/core";
-import { IconCirclePlus, IconTrash } from "@tabler/icons";
+import { FormEvent, useCallback } from "react";
 import type { NextPage } from "next";
 import { Spinner } from "src/component/Spinner";
+import { useStore } from "src/lib/hook/useStore";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
-import { useTodos } from "src/lib/hook/useTodos";
-import { useStore } from "src/lib/useStore";
+import { Checkbox } from "@mantine/core";
+import { IconCirclePlus, IconTrash } from "@tabler/icons";
 
 type Todo = {
   id: string;
@@ -16,12 +16,30 @@ type Todo = {
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
+  const { editingTask } = useStore();
+  const update = useStore((state) => state.updateEditingTask);
+  const reset = useStore((state) => state.resetEditingTask);
   const { createTodoMutation } = useMutateTodos();
+
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (editingTask.title === "") {
+        return;
+      }
+      createTodoMutation.mutate({
+        title: editingTask.title,
+        isDone: false,
+      });
+      reset();
+    },
+    [editingTask]
+  );
+
   const { data: todos, status } = useQueryTodos();
   if (status === "loading") return <Spinner />;
   if (status === "error") return <p>{"Error"}</p>;
-  console.log(todos);
-  // const { state, handleAdd, handleComplete } = useTodos();
+
   const todayTodos = todos
     ? todos.filter((todo: Todo) => todo.dueDate === "today")
     : [];
@@ -34,96 +52,67 @@ export const Dashboard: NextPage = (props) => {
 
   return (
     <div className="min-w-full md:flex flex-row">
-      <Todos
-        color="pink"
-        array={todayTodos}
-        title={<p className="text-xl text-rose-500 font-semibold">今日する</p>}
-        // handleComplete={handleComplete}
-        // handleAdd={handleAdd}
-      />
-      <Todos
-        color="orange"
-        array={tomorrowTodos}
-        title={
-          <p className="text-xl text-orange-400 font-semibold">明日する</p>
-        }
-        // handleComplete={handleComplete}
-      />
-      <Todos
-        color="yellow"
-        array={afterTodos}
-        title={
-          <p className="text-xl text-yellow-400 font-semibold">今度する</p>
-        }
-        // handleComplete={handleComplete}
-      />
+      <ul className="list-none p-0">
+        {todayTodos.map((todo) => (
+          <Todos
+            color="pink"
+            key={todo.id}
+            id={todo.id}
+            title={todo.title}
+            isDone={todo.isDone}
+            dueDate={todo.isDone}
+          />
+        ))}
+        <li>
+          <form action="" method="" onSubmit={handleSubmit}>
+            <IconCirclePlus className="text-gray-400 align-middle" />
+            <input
+              className="border-none focus:outline-none align-middle"
+              type="text"
+              placeholder="タスクを追加する"
+              value={editingTask.title}
+              onChange={(e) =>
+                update({ ...editingTask, title: e.target.value })
+              }
+            ></input>
+          </form>
+        </li>
+      </ul>
     </div>
   );
 };
 
 export const Todos = (props: any) => {
   const { editingTask } = useStore();
+  const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
   const update = useStore((state) => state.updateEditingTask);
-  const { createTodoMutation } = useMutateTodos();
+  const toggleComplete = () => {};
 
   return (
-    <div className="px-4 w-full lg:w-1/3">
-      {props.title}
-      <ul className="list-none p-0">
-        {props.array.length === 0 ? (
-          <li>
-            <form action="" method="" onSubmit={() => createTodoMutation}>
-              <IconCirclePlus className="text-gray-400 align-middle" />
-              <input
-                className="border-none focus:outline-none align-middle"
-                type="text"
-                placeholder="タスクを追加する"
-                value={editingTask.title}
-                onChange={(e) =>
-                  update({ ...editingTask, title: e.target.value })
-                }
-              ></input>
-            </form>
-          </li>
-        ) : (
-          props.array.map((todo: Todo) => (
-            <li key={todo.id} className="group mb-6 flex justify-between">
-              <div className="flex">
-                <Checkbox
-                  id={todo.id}
-                  radius="xl"
-                  color={props.color}
-                  className="mt-1 mr-2"
-                  checked={todo.isDone}
-                  onClick={(e) => {
-                    props.handleComplete(e);
-                  }}
-                />
-                {/* <input
-                className="mr-4 align-top"
-                id={todo.id}
-                type="checkbox"
-                value={todo.title}
-                checked={todo.isDone}
-                onClick={(e) => {
-                  props.handleComplete(e);
-                }}
-              /> */}
-                <label
-                  className={`text-lg ${
-                    todo.isDone ? "text-gray-400 line-through" : "text-gray-900"
-                  }`}
-                >
-                  {todo.title}
-                </label>
-              </div>
-              <div>
-                <IconTrash className="items-end h-5 w-5 m-2 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
-              </div>
-            </li>
-          ))
-        )}
-      </ul>
-    </div>
+    <li key={props.id} className="group mb-6 flex justify-between">
+      <div className="flex">
+        <Checkbox
+          id={props.id}
+          radius="xl"
+          color={props.color}
+          className="mt-1 mr-2"
+          checked={props.isDone}
+          onChange={toggleComplete}
+        />
+        <label
+          className={`text-lg ${
+            props.isDone ? "text-gray-400 line-through" : "text-gray-900"
+          }`}
+        >
+          {props.title}
+        </label>
+      </div>
+      <div>
+        <IconTrash
+          className="items-end h-5 w-5 m-2 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
+          onClick={() => deleteTodoMutation.mutate({ id: props.id })}
+        />
+      </div>
+    </li>
   );
 };

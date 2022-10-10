@@ -31,6 +31,7 @@ export const useStore = create<State>((set) => ({
         dueDate: payload.dueDate,
       },
     }),
+
   resetEditingTask: () =>
     set({ editingTask: { id: "", title: "", isDone: false, dueDate: "" } }),
 }));

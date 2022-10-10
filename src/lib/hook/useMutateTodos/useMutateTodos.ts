@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { EditingTask, Task, useStore } from "src/lib/useStore";
+import { EditingTask, Task, useStore } from "src/lib/hook/useStore";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
@@ -8,7 +8,7 @@ export const useMutateTodos = () => {
   const reset = useStore((state) => state.resetEditingTask);
 
   const createTodoMutation = useMutation(
-    async (todo: Omit<Task, "id" | "created_at" | "dueDate">) => {
+    async (todo: Omit<Task, "id" | "created_at" | "dueDate" | "user_id">) => {
       const { data, error } = await supabase
         .from("todos")
         .insert({ ...todo, dueDate: "today" });
@@ -16,6 +16,23 @@ export const useMutateTodos = () => {
       return data;
     },
 
+    {
+      onError: (err: any) => {
+        alert(err.message);
+        reset();
+      },
+    }
+  );
+
+  const completeTodoMutation = useMutation(
+    async (todo: { id: string; isDone: boolean }) => {
+      const { data, error } = await supabase
+        .from("todos")
+        .update({ isDone: todo.isDone })
+        .eq("id", todo.id);
+      if (error) throw new Error(error.message);
+      return data;
+    },
     {
       onError: (err: any) => {
         alert(err.message);
@@ -42,7 +59,7 @@ export const useMutateTodos = () => {
   );
 
   const deleteTodoMutation = useMutation(
-    async (todo: Omit<Task, "created_at" | "title" | "user_id">) => {
+    async (todo: { id: string }) => {
       const { data, error } = await supabase
         .from("todos")
         .delete()
@@ -59,8 +76,9 @@ export const useMutateTodos = () => {
   );
 
   return {
-    deleteTodoMutation,
-    updateTodoMutation,
     createTodoMutation,
+    completeTodoMutation,
+    updateTodoMutation,
+    deleteTodoMutation,
   };
 };
