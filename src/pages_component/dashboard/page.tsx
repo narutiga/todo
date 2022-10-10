@@ -9,8 +9,31 @@ import { IconCirclePlus, IconTrash } from "@tabler/icons";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
-  const { editingTask } = useStore();
+  const { data: todos, status } = useQueryTodos();
+  if (status === "loading") return <Spinner />;
+  if (status === "error") return <p>{"Error"}</p>;
+
+  const todayTodos = todos
+    ? todos.filter((todo: Task) => todo.dueDate === "today")
+    : [];
+  const tomorrowTodos = todos
+    ? todos.filter((todo: Task) => todo.dueDate === "tomorrow")
+    : [];
+  const afterTodos = todos
+    ? todos.filter((todo: Task) => todo.dueDate === "after")
+    : [];
+
+  return (
+    <Todos
+      todos={todayTodos}
+      title={<p className="text-xl font-semibold text-rose-500">今日する</p>}
+    />
+  );
+};
+
+export const Todos = (props: any) => {
   const update = useStore((state) => state.updateEditingTask);
+  const { editingTask } = useStore();
   const reset = useStore((state) => state.resetEditingTask);
   const { createTodoMutation } = useMutateTodos();
 
@@ -29,26 +52,11 @@ export const Dashboard: NextPage = (props) => {
     [editingTask]
   );
 
-  const { data: todos, status } = useQueryTodos();
-  if (status === "loading") return <Spinner />;
-  if (status === "error") return <p>{"Error"}</p>;
-
-  console.log(todos);
-
-  const todayTodos = todos
-    ? todos.filter((todo: Task) => todo.dueDate === "today")
-    : [];
-  const tomorrowTodos = todos
-    ? todos.filter((todo: Task) => todo.dueDate === "tomorrow")
-    : [];
-  const afterTodos = todos
-    ? todos.filter((todo: Task) => todo.dueDate === "after")
-    : [];
-
   return (
     <div className="min-w-full md:flex flex-row">
+      {props.title}
       <ul className="list-none p-0">
-        {todayTodos.map((todo) => (
+        {props.todos.map((todo: Task) => (
           <Todo
             color="pink"
             key={todo.id}
@@ -82,7 +90,7 @@ export const Todo = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
 
   return (
-    <li key={props.id} className="group mb-6 flex justify-between">
+    <li key={props.id} className="group mb-2 flex justify-between">
       <div className="flex">
         <Checkbox
           id={props.id}
