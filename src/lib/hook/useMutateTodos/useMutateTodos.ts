@@ -9,7 +9,7 @@ export const useMutateTodos = () => {
 
   const createTodoMutation = useMutation(
     async (todo: Omit<Task, "id" | "created_at">) => {
-      const { data, error } = await supabase.from("todos").insert({ ...todo });
+      const { data, error } = await supabase.from("todos").insert(todo);
       if (error) throw new Error(error.message);
       return data;
     },
@@ -42,7 +42,7 @@ export const useMutateTodos = () => {
         const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
         if (previousTodos) {
           const newTodos = previousTodos.map((todo) =>
-            todo.id === res[0].id ? { ...todo, isDone: !res[0].isDone } : todo
+            todo.id === res[0].id ? { ...todo, isDone: !todo.isDone } : todo
           );
           queryClient.setQueriesData(["todos"], newTodos);
         }

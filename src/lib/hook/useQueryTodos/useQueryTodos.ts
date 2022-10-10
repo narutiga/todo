@@ -15,7 +15,7 @@ export const useQueryTodos = () => {
     return data;
   };
   return useQuery<Task[], Error>({
-    queryKey: ["todo"],
+    queryKey: ["todos"],
     queryFn: getTodos,
     staleTime: Infinity,
   });
