@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from "react-query";
-import { EditingTask, Task, useStore } from "src/lib/hook/useStore";
+import { EditingTask, Task } from "src/lib/hook/useStore/type";
+import { useStore } from "src/lib/hook/useStore";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
 export const useMutateTodos = () => {
   const queryClient = useQueryClient();
-  const reset = useStore((state) => state.resetEditingTask);
+  const resetToday = useStore((state) => state.resetEditingTodoToday);
+  const resetTomorrow = useStore((state) => state.resetEditingTodoTomorrow);
+  const resetAfter = useStore((state) => state.resetEditingTodoAfter);
 
   const createTodoMutation = useMutation(
     async (todo: Omit<Task, "id" | "created_at">) => {
@@ -19,11 +22,15 @@ export const useMutateTodos = () => {
         if (previousTodos) {
           queryClient.setQueriesData(["todos"], [...previousTodos, res[0]]);
         }
-        reset();
+        resetToday();
+        resetTomorrow();
+        resetAfter();
       },
       onError: (err: any) => {
         alert(err.message);
-        reset();
+        resetToday();
+        resetTomorrow();
+        resetAfter();
       },
     }
   );
@@ -46,11 +53,15 @@ export const useMutateTodos = () => {
           );
           queryClient.setQueriesData(["todos"], newTodos);
         }
-        reset();
+        resetToday();
+        resetTomorrow();
+        resetAfter();
       },
       onError: (err: any) => {
         alert(err.message);
-        reset();
+        resetToday();
+        resetTomorrow();
+        resetAfter();
       },
     }
   );
@@ -67,7 +78,9 @@ export const useMutateTodos = () => {
     {
       onError: (err: any) => {
         alert(err.message);
-        reset();
+        resetToday();
+        resetTomorrow();
+        resetAfter();
       },
     }
   );
@@ -93,7 +106,9 @@ export const useMutateTodos = () => {
       },
       onError: (err: any) => {
         alert(err.message);
-        reset();
+        resetToday();
+        resetTomorrow();
+        resetAfter();
       },
     }
   );

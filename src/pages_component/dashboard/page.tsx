@@ -1,15 +1,23 @@
 import { FormEvent, useCallback } from "react";
 import type { NextPage } from "next";
-import { Spinner } from "src/component/Spinner";
-import { Task, useStore } from "src/lib/hook/useStore";
+import { Task } from "src/lib/hook/useStore/type";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
+import { supabase } from "src/lib/util/supabase";
+import { useStore } from "src/lib/hook/useStore";
+import { Spinner } from "src/component/Spinner";
 import { Checkbox } from "@mantine/core";
 import { IconCirclePlus, IconCopy, IconTrash } from "@tabler/icons";
-import { supabase } from "src/lib/util/supabase";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
+  const updateToday = useStore((state) => state.updateEditingTodoToday);
+  const { editingTodoToday } = useStore();
+  const updateTomorrow = useStore((state) => state.updateEditingTodoTomorrow);
+  const { editingTodoTomorrow } = useStore();
+  const updateAfter = useStore((state) => state.updateEditingTodoAfter);
+  const { editingTodoAfter } = useStore();
+
   const { data: todos, status } = useQueryTodos();
   if (status === "loading") return <Spinner />;
   if (status === "error") return <p>{"Error"}</p>;
@@ -25,43 +33,66 @@ export const Dashboard: NextPage = (props) => {
     : [];
 
   return (
-    <Todos
-      todos={todayTodos}
-      title={<p className="text-xl font-semibold text-rose-500">今日する</p>}
-    />
+    <div className="flex-row md:flex w-full">
+      <Todos
+        todos={todayTodos}
+        dueDate="today"
+        color="pink"
+        update={updateToday}
+        editingTask={editingTodoToday}
+        title={<p className="text-xl font-semibold text-rose-500">今日する</p>}
+      />
+      <Todos
+        todos={tomorrowTodos}
+        dueDate="tomorrow"
+        color="orange"
+        update={updateTomorrow}
+        editingTask={editingTodoTomorrow}
+        title={
+          <p className="text-xl font-semibold text-orange-400">明日する</p>
+        }
+      />
+      <Todos
+        todos={afterTodos}
+        dueDate="after"
+        color="yellow"
+        update={updateAfter}
+        editingTask={editingTodoAfter}
+        title={
+          <p className="text-xl font-semibold text-yellow-400">今度する</p>
+        }
+      />
+    </div>
   );
 };
 
 export const Todos = (props: any) => {
-  const update = useStore((state) => state.updateEditingTask);
-  const { editingTask } = useStore();
-  const reset = useStore((state) => state.resetEditingTask);
   const { createTodoMutation } = useMutateTodos();
 
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (editingTask.title === "") {
+      if (props.editingTask.title === "") {
         return;
       }
       createTodoMutation.mutate({
-        title: editingTask.title,
+        title: props.editingTask.title,
         isDone: false,
-        dueDate: "today",
+        dueDate: props.dueDate,
         user_id: supabase.auth.user()?.id,
       });
     },
-    [editingTask]
+    [props.editingTask]
   );
 
   return (
-    <div className="min-w-full">
+    <div className="ml-4 mb-12 w-full md:w-1/3">
       {props.title}
       <ul className="list-none p-0">
         {props.todos.map((todo: Task) => (
           <Todo
-            color="pink"
             key={todo.id}
+            color={props.color}
             id={todo.id}
             title={todo.title}
             isDone={todo.isDone}
@@ -75,9 +106,9 @@ export const Todos = (props: any) => {
               className="border-none focus:outline-none align-middle"
               type="text"
               placeholder="タスクを追加する"
-              value={editingTask.title}
+              value={props.editingTask.title}
               onChange={(e) =>
-                update({ ...editingTask, title: e.target.value })
+                props.update({ ...props.editingTask, title: e.target.value })
               }
             ></input>
           </form>
@@ -92,7 +123,7 @@ export const Todo = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
 
   return (
-    <li key={props.id} className="group mb-6 flex justify-between">
+    <li key={props.id} className="group mb-3 flex justify-between">
       <div className="flex">
         <Checkbox
           id={props.id}
@@ -113,9 +144,9 @@ export const Todo = (props: any) => {
         </label>
       </div>
       <div className="flex">
-        <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
+        <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 mb:group-hover:opacity-100" />
         <IconTrash
-          className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
+          className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 mb:group-hover:opacity-100"
           onClick={() => deleteTodoMutation.mutate({ id: props.id })}
         />
       </div>

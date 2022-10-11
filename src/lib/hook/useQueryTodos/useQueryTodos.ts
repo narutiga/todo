@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Task } from "src/lib/hook/useStore";
+import { Task } from "src/lib/hook/useStore/index3";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
