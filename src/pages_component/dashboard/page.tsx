@@ -1,12 +1,12 @@
 import { FormEvent, useCallback } from "react";
 import type { NextPage } from "next";
-import { Task } from "src/lib/hook/useStore/type";
+import { Todo } from "src/lib/hook/useStore/type";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { supabase } from "src/lib/util/supabase";
 import { useStore } from "src/lib/hook/useStore";
 import { Spinner } from "src/component/Spinner";
-import { Checkbox } from "@mantine/core";
+import { Checkbox, TextInput } from "@mantine/core";
 import { IconCirclePlus, IconCopy, IconTrash } from "@tabler/icons";
 
 /** @package */
@@ -23,18 +23,18 @@ export const Dashboard: NextPage = (props) => {
   if (status === "error") return <p>{"Error"}</p>;
 
   const todayTodos = todos
-    ? todos.filter((todo: Task) => todo.dueDate === "today")
+    ? todos.filter((todo: Todo) => todo.dueDate === "today")
     : [];
   const tomorrowTodos = todos
-    ? todos.filter((todo: Task) => todo.dueDate === "tomorrow")
+    ? todos.filter((todo: Todo) => todo.dueDate === "tomorrow")
     : [];
   const afterTodos = todos
-    ? todos.filter((todo: Task) => todo.dueDate === "after")
+    ? todos.filter((todo: Todo) => todo.dueDate === "after")
     : [];
 
   return (
     <div className="flex-row md:flex w-full">
-      <Todos
+      <TodoList
         todos={todayTodos}
         dueDate="today"
         color="pink"
@@ -42,7 +42,7 @@ export const Dashboard: NextPage = (props) => {
         editingTask={editingTodoToday}
         title={<p className="text-xl font-semibold text-rose-500">今日する</p>}
       />
-      <Todos
+      <TodoList
         todos={tomorrowTodos}
         dueDate="tomorrow"
         color="orange"
@@ -52,7 +52,7 @@ export const Dashboard: NextPage = (props) => {
           <p className="text-xl font-semibold text-orange-400">明日する</p>
         }
       />
-      <Todos
+      <TodoList
         todos={afterTodos}
         dueDate="after"
         color="yellow"
@@ -66,7 +66,7 @@ export const Dashboard: NextPage = (props) => {
   );
 };
 
-export const Todos = (props: any) => {
+export const TodoList = (props: any) => {
   const { createTodoMutation } = useMutateTodos();
 
   const handleSubmit = useCallback(
@@ -89,8 +89,8 @@ export const Todos = (props: any) => {
     <div className="ml-4 mb-12 w-full md:w-1/3">
       {props.title}
       <ul className="list-none p-0">
-        {props.todos.map((todo: Task) => (
-          <Todo
+        {props.todos.map((todo: Todo) => (
+          <TodoItem
             key={todo.id}
             color={props.color}
             id={todo.id}
@@ -110,7 +110,7 @@ export const Todos = (props: any) => {
               onChange={(e) =>
                 props.update({ ...props.editingTask, title: e.target.value })
               }
-            ></input>
+            />
           </form>
         </li>
       </ul>
@@ -119,7 +119,7 @@ export const Todos = (props: any) => {
 };
 
 /** @package */
-export const Todo = (props: any) => {
+export const TodoItem = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
 
   return (
@@ -151,5 +151,17 @@ export const Todo = (props: any) => {
         />
       </div>
     </li>
+  );
+};
+
+export const Input = () => {
+  return (
+    <TextInput
+      icon={<IconCirclePlus />}
+      placeholder="タスクを追加"
+      variant="unstyled"
+      radius="md"
+      size="md"
+    />
   );
 };

@@ -1,4 +1,4 @@
-export type Task = {
+export type Todo = {
   id: string;
   created_at: string;
   title: string;
@@ -7,23 +7,23 @@ export type Task = {
   user_id: string | undefined;
 };
 
-export type EditingTask = Omit<Task, "created_at" | "user_id">;
+export type EditingTodo = Omit<Todo, "created_at" | "user_id">;
 
 export type TodosToday = {
-  editingTodoToday: EditingTask;
-  updateEditingTodoToday: (payload: EditingTask) => void;
+  editingTodoToday: EditingTodo;
+  updateEditingTodoToday: (payload: EditingTodo) => void;
   resetEditingTodoToday: () => void;
 };
 
 export type TodosTomorrow = {
-  editingTodoTomorrow: EditingTask;
-  updateEditingTodoTomorrow: (payload: EditingTask) => void;
+  editingTodoTomorrow: EditingTodo;
+  updateEditingTodoTomorrow: (payload: EditingTodo) => void;
   resetEditingTodoTomorrow: () => void;
 };
 
 export type TodosAfter = {
-  editingTodoAfter: EditingTask;
-  updateEditingTodoAfter: (payload: EditingTask) => void;
+  editingTodoAfter: EditingTodo;
+  updateEditingTodoAfter: (payload: EditingTodo) => void;
   resetEditingTodoAfter: () => void;
 };
 

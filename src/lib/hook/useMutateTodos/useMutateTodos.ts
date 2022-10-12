@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { EditingTask, Task } from "src/lib/hook/useStore/type";
+import { EditingTodo, Todo } from "src/lib/hook/useStore/type";
 import { useStore } from "src/lib/hook/useStore";
 import { supabase } from "src/lib/util/supabase";
 
@@ -11,14 +11,14 @@ export const useMutateTodos = () => {
   const resetAfter = useStore((state) => state.resetEditingTodoAfter);
 
   const createTodoMutation = useMutation(
-    async (todo: Omit<Task, "id" | "created_at">) => {
+    async (todo: Omit<Todo, "id" | "created_at">) => {
       const { data, error } = await supabase.from("todos").insert(todo);
       if (error) throw new Error(error.message);
       return data;
     },
     {
       onSuccess: (res) => {
-        const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
+        const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
         if (previousTodos) {
           queryClient.setQueriesData(["todos"], [...previousTodos, res[0]]);
         }
@@ -46,7 +46,7 @@ export const useMutateTodos = () => {
     },
     {
       onSuccess: (res) => {
-        const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
+        const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
         if (previousTodos) {
           const newTodos = previousTodos.map((todo) =>
             todo.id === res[0].id ? { ...todo, isDone: !todo.isDone } : todo
@@ -67,7 +67,7 @@ export const useMutateTodos = () => {
   );
 
   const updateTodoMutation = useMutation(
-    async (todo: EditingTask) => {
+    async (todo: EditingTodo) => {
       const { data, error } = await supabase
         .from("todos")
         .update({ title: todo.title })
@@ -96,7 +96,7 @@ export const useMutateTodos = () => {
     },
     {
       onSuccess: (_, variables) => {
-        const previousTodos = queryClient.getQueryData<Task[]>(["todos"]);
+        const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
         if (previousTodos) {
           queryClient.setQueryData(
             ["todos"],
