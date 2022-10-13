@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Task } from "src/lib/hook/useStore/index3";
+import { Todo } from "src/lib/hook/useStore/type";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
@@ -14,7 +14,7 @@ export const useQueryTodos = () => {
     }
     return data;
   };
-  return useQuery<Task[], Error>({
+  return useQuery<Todo[], Error>({
     queryKey: ["todos"],
     queryFn: getTodos,
     staleTime: Infinity,
