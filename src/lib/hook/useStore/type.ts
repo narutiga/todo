@@ -37,7 +37,7 @@ export type TodosArray = {
 
 export type Array = {
   todosArray: TodosArray;
-  updateTodosArray: (dodoData: TodosArray | undefined) => void;
+  updateTodosArray: (dodoData: Todo[] | undefined) => void;
 };
 
 export type State = Todos & Array;

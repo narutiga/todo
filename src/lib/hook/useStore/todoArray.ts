@@ -1,4 +1,4 @@
-import { Array, State, TodosArray } from "src/lib/hook/useStore/type";
+import { Array, State, Todo } from "src/lib/hook/useStore/type";
 import { StateCreator } from "zustand";
 
 /** @package */
@@ -13,8 +13,16 @@ export const createArraySlice: StateCreator<
     tomorrow: [],
     after: [],
   },
-  updateTodosArray: (todoData: TodosArray | undefined) =>
+  updateTodosArray: (todoData: Todo[] | undefined) =>
     set((payload) => {
-      todoData ? todoData : payload;
+      todoData
+        ? {
+            today: payload.filter((todo: Todo) => todo.dueDate === "today"),
+            tomorrow: payload.filter(
+              (todo: Todo) => todo.dueDate === "tomorrow"
+            ),
+            after: payload.filter((todo: Todo) => todo.dueDate === "after"),
+          }
+        : payload;
     }),
 });

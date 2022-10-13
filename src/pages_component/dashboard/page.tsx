@@ -11,6 +11,8 @@ import { IconCirclePlus, IconCopy, IconTrash } from "@tabler/icons";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
+  const updateArray = useStore((state) => state.updateTodosArray);
+  const { todosArray } = useStore();
   const updateToday = useStore((state) => state.updateEditingTodoToday);
   const { editingTodoToday } = useStore();
   const updateTomorrow = useStore((state) => state.updateEditingTodoTomorrow);
@@ -22,20 +24,22 @@ export const Dashboard: NextPage = (props) => {
   if (status === "loading") return <Spinner />;
   if (status === "error") return <p>{"Error"}</p>;
 
-  const todayTodos = todos
-    ? todos.filter((todo: Todo) => todo.dueDate === "today")
-    : [];
-  const tomorrowTodos = todos
-    ? todos.filter((todo: Todo) => todo.dueDate === "tomorrow")
-    : [];
-  const afterTodos = todos
-    ? todos.filter((todo: Todo) => todo.dueDate === "after")
-    : [];
+  updateArray(todos);
+
+  // const todayTodos = todos
+  //   ? todos.filter((todo: Todo) => todo.dueDate === "today")
+  //   : [];
+  // const tomorrowTodos = todos
+  //   ? todos.filter((todo: Todo) => todo.dueDate === "tomorrow")
+  //   : [];
+  // const afterTodos = todos
+  //   ? todos.filter((todo: Todo) => todo.dueDate === "after")
+  //   : [];
 
   return (
     <div className="flex-row md:flex w-full">
       <TodoList
-        todos={todayTodos}
+        todos={todosArray.today}
         dueDate="today"
         color="pink"
         update={updateToday}
@@ -43,7 +47,7 @@ export const Dashboard: NextPage = (props) => {
         title={<p className="text-xl font-semibold text-rose-500">今日する</p>}
       />
       <TodoList
-        todos={tomorrowTodos}
+        todos={todosArray.tomorrow}
         dueDate="tomorrow"
         color="orange"
         update={updateTomorrow}
@@ -53,7 +57,7 @@ export const Dashboard: NextPage = (props) => {
         }
       />
       <TodoList
-        todos={afterTodos}
+        todos={todosArray.after}
         dueDate="after"
         color="yellow"
         update={updateAfter}
