@@ -1,13 +1,12 @@
-import { State } from "src/lib/hook/useStore/type";
+import { State, Todos } from "src/lib/hook/useStore/type";
 import { StateCreator } from "zustand";
 
 /** @package */
 export const createTodosSlice: StateCreator<
   State,
+  [["zustand/devtools", never], ["zustand/immer", never]],
   [],
-  // [["zustand/devtools", never], ["zustand/immer", never]],
-  [],
-  State
+  Todos
 > = (set) => ({
   editingTodoToday: { id: "", title: "", isDone: false, dueDate: "" },
   updateEditingTodoToday: (payload) =>

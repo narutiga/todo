@@ -27,4 +27,17 @@ export type TodosAfter = {
   resetEditingTodoAfter: () => void;
 };
 
-export type State = TodosToday & TodosTomorrow & TodosAfter;
+export type Todos = TodosToday & TodosTomorrow & TodosAfter;
+
+export type TodosArray = {
+  today: Todo[];
+  tomorrow: Todo[];
+  after: Todo[];
+};
+
+export type Array = {
+  todosArray: TodosArray;
+  updateTodosArray: (dodoData: TodosArray | undefined) => void;
+};
+
+export type State = Todos & Array;
