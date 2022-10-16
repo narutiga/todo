@@ -6,9 +6,6 @@ import { supabase } from "src/lib/util/supabase";
 /** @package */
 export const useMutateTodos = () => {
   const queryClient = useQueryClient();
-  const resetToday = useStore((state) => state.resetEditingTodoToday);
-  const resetTomorrow = useStore((state) => state.resetEditingTodoTomorrow);
-  const resetAfter = useStore((state) => state.resetEditingTodoAfter);
 
   const createTodoMutation = useMutation(
     async (todo: Omit<Todo, "id" | "created_at">) => {
@@ -22,15 +19,9 @@ export const useMutateTodos = () => {
         if (previousTodos) {
           queryClient.setQueriesData(["todos"], [...previousTodos, res[0]]);
         }
-        resetToday();
-        resetTomorrow();
-        resetAfter();
       },
       onError: (err: any) => {
         alert(err.message);
-        resetToday();
-        resetTomorrow();
-        resetAfter();
       },
     }
   );
@@ -53,15 +44,9 @@ export const useMutateTodos = () => {
           );
           queryClient.setQueriesData(["todos"], newTodos);
         }
-        resetToday();
-        resetTomorrow();
-        resetAfter();
       },
       onError: (err: any) => {
         alert(err.message);
-        resetToday();
-        resetTomorrow();
-        resetAfter();
       },
     }
   );
@@ -78,9 +63,6 @@ export const useMutateTodos = () => {
     {
       onError: (err: any) => {
         alert(err.message);
-        resetToday();
-        resetTomorrow();
-        resetAfter();
       },
     }
   );
@@ -106,9 +88,6 @@ export const useMutateTodos = () => {
       },
       onError: (err: any) => {
         alert(err.message);
-        resetToday();
-        resetTomorrow();
-        resetAfter();
       },
     }
   );

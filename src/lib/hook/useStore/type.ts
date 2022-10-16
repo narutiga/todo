@@ -29,15 +29,11 @@ export type TodosAfter = {
 
 export type Todos = TodosToday & TodosTomorrow & TodosAfter;
 
-export type TodosArray = {
-  today: Todo[];
-  tomorrow: Todo[];
-  after: Todo[];
-};
-
 export type Array = {
-  todosArray: TodosArray;
-  updateTodosArray: (dodoData: Todo[] | undefined) => void;
+  todosArray: EditingTodo[];
+  addTodo: (todo: EditingTodo) => void;
+  deleteTodo: (id: string) => void;
+  toggleTodo: (id: string) => void;
 };
 
 export type State = Todos & Array;

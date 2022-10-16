@@ -1,14 +1,16 @@
 import { State, Todos } from "src/lib/hook/useStore/type";
 import { StateCreator } from "zustand";
 
+// , ["zustand/immer", never]
+
 /** @package */
 export const createTodosSlice: StateCreator<
   State,
-  [["zustand/devtools", never], ["zustand/immer", never]],
+  [["zustand/devtools", never]],
   [],
   Todos
 > = (set) => ({
-  editingTodoToday: { id: "", title: "", isDone: false, dueDate: "" },
+  editingTodoToday: { id: "", title: "", isDone: false, dueDate: "today" },
   updateEditingTodoToday: (payload) =>
     set({
       editingTodoToday: {
@@ -20,11 +22,16 @@ export const createTodosSlice: StateCreator<
     }),
   resetEditingTodoToday: () =>
     set({
-      editingTodoToday: { id: "", title: "", isDone: false, dueDate: "" },
+      editingTodoToday: { id: "", title: "", isDone: false, dueDate: "tday" },
     }),
 
-  editingTodoTomorrow: { id: "", title: "", isDone: false, dueDate: "" },
-  updateEditingTodoTomorrow: (payload: any) =>
+  editingTodoTomorrow: {
+    id: "",
+    title: "",
+    isDone: false,
+    dueDate: "tomorrow",
+  },
+  updateEditingTodoTomorrow: (payload) =>
     set({
       editingTodoTomorrow: {
         id: payload.id,
@@ -35,11 +42,16 @@ export const createTodosSlice: StateCreator<
     }),
   resetEditingTodoTomorrow: () =>
     set({
-      editingTodoTomorrow: { id: "", title: "", isDone: false, dueDate: "" },
+      editingTodoTomorrow: {
+        id: "",
+        title: "",
+        isDone: false,
+        dueDate: "tomorrow",
+      },
     }),
 
-  editingTodoAfter: { id: "", title: "", isDone: false, dueDate: "" },
-  updateEditingTodoAfter: (payload: any) =>
+  editingTodoAfter: { id: "", title: "", isDone: false, dueDate: "after" },
+  updateEditingTodoAfter: (payload) =>
     set({
       editingTodoAfter: {
         id: payload.id,
@@ -50,6 +62,6 @@ export const createTodosSlice: StateCreator<
     }),
   resetEditingTodoAfter: () =>
     set({
-      editingTodoAfter: { id: "", title: "", isDone: false, dueDate: "" },
+      editingTodoAfter: { id: "", title: "", isDone: false, dueDate: "after" },
     }),
 });

@@ -6,12 +6,10 @@ import { createTodosSlice } from "src/lib/hook/useStore/todos";
 import { createArraySlice } from "src/lib/hook/useStore/todoArray";
 
 export const useStore = create<State>()(
-  devtools(
-    immer((...args) => {
-      return {
-        ...createArraySlice(...args),
-        ...createTodosSlice(...args),
-      };
-    })
-  )
+  devtools((...args) => {
+    return {
+      ...createArraySlice(...args),
+      ...createTodosSlice(...args),
+    };
+  })
 );
