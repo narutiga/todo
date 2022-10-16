@@ -1,20 +1,20 @@
 import type { NextPage } from "next";
 import { FormEvent, useCallback } from "react";
 import { useInputState } from "@mantine/hooks";
+import { supabase } from "src/lib/util/supabase";
 import { EditingTodo } from "src/lib/hook/useStore/type";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
-import { useStore } from "src/lib/hook/useStore";
+import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { Spinner } from "src/component/Spinner";
 import { TodoList } from "src/component/TodoList/TodoList";
 import { InputItem } from "src/component/InputItem";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
-  const { todosArray } = useStore();
   const [todoToday, setTodoToday] = useInputState("");
   const [todoTomorrow, setTodoTomorrow] = useInputState("");
   const [todoAfter, setTodoAfter] = useInputState("");
-  const add = useStore((state) => state.addTodo);
+  const { createTodoMutation } = useMutateTodos();
 
   const handleSubmitToday = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -22,7 +22,12 @@ export const Dashboard: NextPage = (props) => {
       if (todoToday === "") {
         return;
       }
-      add({ id: "", title: todoToday, isDone: false, dueDate: "today" });
+      createTodoMutation.mutate({
+        title: todoToday,
+        isDone: false,
+        dueDate: "today",
+        user_id: supabase.auth.user()?.id,
+      });
       setTodoToday("");
     },
     [todoToday]
@@ -34,10 +39,15 @@ export const Dashboard: NextPage = (props) => {
       if (todoTomorrow === "") {
         return;
       }
-      add({ id: "", title: todoTomorrow, isDone: false, dueDate: "tomorrow" });
+      createTodoMutation.mutate({
+        title: todoTomorrow,
+        isDone: false,
+        dueDate: "tomorrow",
+        user_id: supabase.auth.user()?.id,
+      });
       setTodoTomorrow("");
     },
-    [todoToday]
+    [todoTomorrow]
   );
 
   const handleSubmitAfter = useCallback(
@@ -46,10 +56,15 @@ export const Dashboard: NextPage = (props) => {
       if (todoAfter === "") {
         return;
       }
-      add({ id: "", title: todoAfter, isDone: false, dueDate: "after" });
+      createTodoMutation.mutate({
+        title: todoAfter,
+        isDone: false,
+        dueDate: "after",
+        user_id: supabase.auth.user()?.id,
+      });
       setTodoAfter("");
     },
-    [todoToday]
+    [todoAfter]
   );
 
   const { data: todos, status } = useQueryTodos();
