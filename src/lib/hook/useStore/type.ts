@@ -4,6 +4,7 @@ export type Todo = {
   title: string;
   isDone: boolean;
   dueDate: string;
+  index?: number;
   user_id: string | undefined;
 };
 

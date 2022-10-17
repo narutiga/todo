@@ -8,6 +8,14 @@ import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { Spinner } from "src/component/Spinner";
 import { TodoList } from "src/component/TodoList/TodoList";
 import { InputItem } from "src/component/InputItem";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
@@ -15,6 +23,10 @@ export const Dashboard: NextPage = (props) => {
   const [todoTomorrow, setTodoTomorrow] = useInputState("");
   const [todoAfter, setTodoAfter] = useInputState("");
   const { createTodoMutation } = useMutateTodos();
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const handleSubmitToday = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -26,6 +38,7 @@ export const Dashboard: NextPage = (props) => {
         title: todoToday,
         isDone: false,
         dueDate: "today",
+        index: todayTodos.length,
         user_id: supabase.auth.user()?.id,
       });
       setTodoToday("");
@@ -43,6 +56,7 @@ export const Dashboard: NextPage = (props) => {
         title: todoTomorrow,
         isDone: false,
         dueDate: "tomorrow",
+        index: tomorrowTodos.length,
         user_id: supabase.auth.user()?.id,
       });
       setTodoTomorrow("");
@@ -60,6 +74,7 @@ export const Dashboard: NextPage = (props) => {
         title: todoAfter,
         isDone: false,
         dueDate: "after",
+        index: afterTodos.length,
         user_id: supabase.auth.user()?.id,
       });
       setTodoAfter("");
@@ -82,50 +97,54 @@ export const Dashboard: NextPage = (props) => {
     : [];
 
   return (
-    <div className="flex-row md:flex w-full">
-      <TodoList
-        todos={todayTodos}
-        dueDate="today"
-        color="pink"
-        title={<p className="text-xl font-semibold text-rose-500">今日する</p>}
-        input={
-          <InputItem
-            todo={todoToday}
-            update={setTodoToday}
-            handleSubmit={handleSubmitToday}
-          />
-        }
-      />
-      <TodoList
-        todos={tomorrowTodos}
-        dueDate="tomorrow"
-        color="orange"
-        title={
-          <p className="text-xl font-semibold text-orange-400">明日する</p>
-        }
-        input={
-          <InputItem
-            todo={todoTomorrow}
-            update={setTodoTomorrow}
-            handleSubmit={handleSubmitTomorrow}
-          />
-        }
-      />
-      <TodoList
-        todos={afterTodos}
-        dueDate="after"
-        color="yellow"
-        title={
-          <p className="text-xl font-semibold text-yellow-400">今度する</p>
-        }
-        input={
-          <InputItem
-            todo={todoAfter}
-            update={setTodoAfter}
-            handleSubmit={handleSubmitAfter}
-          />
-        }
-      />
-    </div>
+    <DndContext sensors={sensors}>
+      <div className="flex-row md:flex w-full">
+        <TodoList
+          todos={todayTodos}
+          dueDate="today"
+          color="pink"
+          title={
+            <p className="text-xl font-semibold text-rose-500">今日する</p>
+          }
+          input={
+            <InputItem
+              todo={todoToday}
+              update={setTodoToday}
+              handleSubmit={handleSubmitToday}
+            />
+          }
+        />
+        <TodoList
+          todos={tomorrowTodos}
+          dueDate="tomorrow"
+          color="orange"
+          title={
+            <p className="text-xl font-semibold text-orange-400">明日する</p>
+          }
+          input={
+            <InputItem
+              todo={todoTomorrow}
+              update={setTodoTomorrow}
+              handleSubmit={handleSubmitTomorrow}
+            />
+          }
+        />
+        <TodoList
+          todos={afterTodos}
+          dueDate="after"
+          color="yellow"
+          title={
+            <p className="text-xl font-semibold text-yellow-400">今度する</p>
+          }
+          input={
+            <InputItem
+              todo={todoAfter}
+              update={setTodoAfter}
+              handleSubmit={handleSubmitAfter}
+            />
+          }
+        />
+      </div>
+    </DndContext>
   );
 };
