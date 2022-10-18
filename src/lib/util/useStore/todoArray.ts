@@ -31,7 +31,7 @@ export const createArraySlice: StateCreator<
   [],
   Array
 > = (set) => ({
-  todosArray: mockData1,
+  todosArray: mockData,
 
   moveTodo: (newTodos) =>
     set({

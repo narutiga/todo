@@ -18,6 +18,7 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useStore } from "src/lib/util/useStore";
 import { useDndTodos } from "src/lib/hook/useDndTodos";
 import { EditingTodo } from "src/lib/util/useStore/type";
+import { v4 as uuidv4 } from "uuid";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
@@ -40,16 +41,17 @@ export const Dashboard: NextPage = (props) => {
         return;
       }
       const todo = {
+        id: uuidv4(),
         title: titleToday,
         isDone: false,
         dueDate: "today",
         index: todosArray.today?.length,
       };
-      add({ ...todo, id: "" });
-      // createTodoMutation.mutate({
-      //   ...todo,
-      //   user_id: supabase.auth.user()?.id,
-      // });
+      add(todo);
+      createTodoMutation.mutate({
+        ...todo,
+        user_id: supabase.auth.user()?.id,
+      });
       setTitleToday("");
     },
     [titleToday]
@@ -62,16 +64,17 @@ export const Dashboard: NextPage = (props) => {
         return;
       }
       const todo = {
+        id: uuidv4(),
         title: titleTomorrow,
         isDone: false,
         dueDate: "tomorrow",
         index: todosArray.tomorrow?.length,
       };
-      add({ ...todo, id: "" });
-      // createTodoMutation.mutate({
-      //   ...todo,
-      //   user_id: supabase.auth.user()?.id,
-      // });
+      add(todo);
+      createTodoMutation.mutate({
+        ...todo,
+        user_id: supabase.auth.user()?.id,
+      });
       setTitleTomorrow("");
     },
     [titleTomorrow]
@@ -84,16 +87,17 @@ export const Dashboard: NextPage = (props) => {
         return;
       }
       const todo = {
+        id: uuidv4(),
         title: titleAfter,
         isDone: false,
         dueDate: "after",
         index: todosArray.after?.length,
       };
-      add({ ...todo, id: "" });
-      // createTodoMutation.mutate({
-      //   ...todo,
-      //   user_id: supabase.auth.user()?.id,
-      // });
+      add(todo);
+      createTodoMutation.mutate({
+        ...todo,
+        user_id: supabase.auth.user()?.id,
+      });
       setTitleAfter("");
     },
     [titleAfter]
@@ -112,8 +116,6 @@ export const Dashboard: NextPage = (props) => {
   // const afterTodos = todos
   //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
   //   : [];
-
-  console.log(todosArray);
 
   return (
     <DndContext
