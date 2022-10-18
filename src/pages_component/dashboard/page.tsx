@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { FormEvent, useCallback } from "react";
 import { useInputState } from "@mantine/hooks";
 import { supabase } from "src/lib/util/supabase";
-import { EditingTodo } from "src/lib/hook/useStore/type";
+import { EditingTodo } from "src/lib/util/useStore/type";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { Spinner } from "src/component/Spinner";
@@ -16,9 +16,13 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { useStore } from "src/lib/util/useStore";
+import { useDndTodos } from "src/lib/hook/useDndTodos";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
+  const { todosArray } = useStore();
+  const { handleDragEnd, handleDragOver } = useDndTodos(todosArray);
   const [todoToday, setTodoToday] = useInputState("");
   const [todoTomorrow, setTodoTomorrow] = useInputState("");
   const [todoAfter, setTodoAfter] = useInputState("");
@@ -38,7 +42,7 @@ export const Dashboard: NextPage = (props) => {
         title: todoToday,
         isDone: false,
         dueDate: "today",
-        index: todayTodos.length,
+        index: todosArray.today.length,
         user_id: supabase.auth.user()?.id,
       });
       setTodoToday("");
@@ -56,7 +60,7 @@ export const Dashboard: NextPage = (props) => {
         title: todoTomorrow,
         isDone: false,
         dueDate: "tomorrow",
-        index: tomorrowTodos.length,
+        index: todosArray.tomorrow.length,
         user_id: supabase.auth.user()?.id,
       });
       setTodoTomorrow("");
@@ -74,7 +78,7 @@ export const Dashboard: NextPage = (props) => {
         title: todoAfter,
         isDone: false,
         dueDate: "after",
-        index: afterTodos.length,
+        index: todosArray.after.length,
         user_id: supabase.auth.user()?.id,
       });
       setTodoAfter("");
@@ -86,21 +90,25 @@ export const Dashboard: NextPage = (props) => {
   if (status === "loading") return <Spinner />;
   if (status === "error") return <p>{"Error"}</p>;
 
-  const todayTodos = todos
-    ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
-    : [];
-  const tomorrowTodos = todos
-    ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
-    : [];
-  const afterTodos = todos
-    ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
-    : [];
+  // const todayTodos = todos
+  //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
+  //   : [];
+  // const tomorrowTodos = todos
+  //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
+  //   : [];
+  // const afterTodos = todos
+  //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
+  //   : [];
 
   return (
-    <DndContext sensors={sensors}>
+    <DndContext
+      sensors={sensors}
+      onDragEnd={handleDragEnd}
+      onDragOver={handleDragOver}
+    >
       <div className="flex-row md:flex w-full">
         <TodoList
-          todos={todayTodos}
+          todos={todosArray.today}
           dueDate="today"
           color="pink"
           title={
@@ -115,7 +123,7 @@ export const Dashboard: NextPage = (props) => {
           }
         />
         <TodoList
-          todos={tomorrowTodos}
+          todos={todosArray.tomorrow}
           dueDate="tomorrow"
           color="orange"
           title={
@@ -130,7 +138,7 @@ export const Dashboard: NextPage = (props) => {
           }
         />
         <TodoList
-          todos={afterTodos}
+          todos={todosArray.after}
           dueDate="after"
           color="yellow"
           title={

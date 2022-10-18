@@ -1,7 +1,7 @@
 import { useDroppable } from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { TodoItem } from "src/component/TodoItem";
-import { Todo } from "src/lib/hook/useStore/type";
+import { Todo } from "src/lib/util/useStore/type";
 
 /** @package */
 export const TodoList = (props: any) => {

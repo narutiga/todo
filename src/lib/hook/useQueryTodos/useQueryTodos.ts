@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Todo } from "src/lib/hook/useStore/type";
+import { Todo } from "src/lib/util/useStore/type";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */

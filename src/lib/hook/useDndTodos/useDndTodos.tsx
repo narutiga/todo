@@ -1,13 +1,15 @@
 import { arrayMove } from "@dnd-kit/sortable";
 import { useStore } from "src/lib/util/useStore";
 import { insertAtIndex, removeAtIndex } from "src/lib/util/dnd_sortable";
+import { DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 
 /** @package */
 export const useDndTodos = (todos: any) => {
   const move = useStore((state) => state.moveTodo);
 
-  const handleDragOver = ({ over, active }: any) => {
+  const handleDragOver = ({ over, active }: DragOverEvent) => {
     const overId = over?.id;
+    console.log(active);
 
     if (!overId) {
       return;
@@ -30,14 +32,14 @@ export const useDndTodos = (todos: any) => {
         activeIndex,
         overContainer,
         overIndex,
-        active.id
+        todos[activeContainer][activeIndex]
       );
 
       move(newTodos);
     }
   };
 
-  const handleDragEnd = ({ active, over }: any) => {
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over) {
       return;
     }
@@ -65,7 +67,7 @@ export const useDndTodos = (todos: any) => {
           activeIndex,
           overContainer,
           overIndex,
-          active.id
+          todos[activeContainer][activeIndex]
         );
       }
 

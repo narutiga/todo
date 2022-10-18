@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { EditingTodo, Todo } from "src/lib/hook/useStore/type";
+import { EditingTodo, Todo } from "src/lib/util/useStore/type";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
