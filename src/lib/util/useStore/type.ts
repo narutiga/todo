@@ -10,26 +10,6 @@ export type Todo = {
 
 export type EditingTodo = Omit<Todo, "created_at" | "user_id">;
 
-export type TodosToday = {
-  editingTodoToday: EditingTodo;
-  updateEditingTodoToday: (payload: EditingTodo) => void;
-  resetEditingTodoToday: () => void;
-};
-
-export type TodosTomorrow = {
-  editingTodoTomorrow: EditingTodo;
-  updateEditingTodoTomorrow: (payload: EditingTodo) => void;
-  resetEditingTodoTomorrow: () => void;
-};
-
-export type TodosAfter = {
-  editingTodoAfter: EditingTodo;
-  updateEditingTodoAfter: (payload: EditingTodo) => void;
-  resetEditingTodoAfter: () => void;
-};
-
-export type Todos = TodosToday & TodosTomorrow & TodosAfter;
-
 export type EditingTodos = EditingTodo[] | undefined;
 
 export type Array = {
@@ -48,4 +28,4 @@ export type Array = {
   toggleTodo: (id: string) => void;
 };
 
-export type State = Todos & Array;
+export type State = Array;

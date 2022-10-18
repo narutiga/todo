@@ -9,13 +9,12 @@ export const useDndTodos = (todos: any) => {
 
   const handleDragOver = ({ over, active }: DragOverEvent) => {
     const overId = over?.id;
-    console.log(active);
 
     if (!overId) {
       return;
     }
 
-    const activeContainer = active.data.current.sortable.containerId;
+    const activeContainer = active.data.current?.sortable.containerId;
     const overContainer = over.data.current?.sortable.containerId;
 
     if (!overContainer) {
@@ -23,7 +22,7 @@ export const useDndTodos = (todos: any) => {
     }
 
     if (activeContainer !== overContainer) {
-      const activeIndex = active.data.current.sortable.index;
+      const activeIndex = active.data.current?.sortable.index;
       const overIndex = over.data.current?.sortable.index || over;
 
       let newTodos = moveBetweenContainers(
@@ -45,9 +44,9 @@ export const useDndTodos = (todos: any) => {
     }
 
     if (active.id !== over.id) {
-      const activeContainer = active.data.current.sortable.containerId;
+      const activeContainer = active.data.current?.sortable.containerId;
       const overContainer = over.data.current?.sortable.containerId || over.id;
-      const activeIndex = active.data.current.sortable.index;
+      const activeIndex = active.data.current?.sortable.index;
       const overIndex = over.data.current?.sortable.index || 0;
 
       let newTodos;

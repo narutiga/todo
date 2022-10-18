@@ -1,8 +1,7 @@
 import type { NextPage } from "next";
-import { FormEvent, useCallback } from "react";
+import { FormEvent, useCallback, useEffect } from "react";
 import { useInputState } from "@mantine/hooks";
 import { supabase } from "src/lib/util/supabase";
-import { EditingTodo } from "src/lib/util/useStore/type";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { Spinner } from "src/component/Spinner";
@@ -18,14 +17,16 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useStore } from "src/lib/util/useStore";
 import { useDndTodos } from "src/lib/hook/useDndTodos";
+import { EditingTodo } from "src/lib/util/useStore/type";
 
 /** @package */
 export const Dashboard: NextPage = (props) => {
   const { todosArray } = useStore();
+  const add = useStore((state) => state.addTodo);
   const { handleDragEnd, handleDragOver } = useDndTodos(todosArray);
-  const [todoToday, setTodoToday] = useInputState("");
-  const [todoTomorrow, setTodoTomorrow] = useInputState("");
-  const [todoAfter, setTodoAfter] = useInputState("");
+  const [titleToday, setTitleToday] = useInputState("");
+  const [titleTomorrow, setTitleTomorrow] = useInputState("");
+  const [titleAfter, setTitleAfter] = useInputState("");
   const { createTodoMutation } = useMutateTodos();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -35,60 +36,72 @@ export const Dashboard: NextPage = (props) => {
   const handleSubmitToday = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (todoToday === "") {
+      if (titleToday === "") {
         return;
       }
-      createTodoMutation.mutate({
-        title: todoToday,
+      const todo = {
+        title: titleToday,
         isDone: false,
         dueDate: "today",
-        index: todosArray.today.length,
-        user_id: supabase.auth.user()?.id,
-      });
-      setTodoToday("");
+        index: todosArray.today?.length,
+      };
+      add({ ...todo, id: "" });
+      // createTodoMutation.mutate({
+      //   ...todo,
+      //   user_id: supabase.auth.user()?.id,
+      // });
+      setTitleToday("");
     },
-    [todoToday]
+    [titleToday]
   );
 
   const handleSubmitTomorrow = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (todoTomorrow === "") {
+      if (titleTomorrow === "") {
         return;
       }
-      createTodoMutation.mutate({
-        title: todoTomorrow,
+      const todo = {
+        title: titleTomorrow,
         isDone: false,
         dueDate: "tomorrow",
-        index: todosArray.tomorrow.length,
-        user_id: supabase.auth.user()?.id,
-      });
-      setTodoTomorrow("");
+        index: todosArray.tomorrow?.length,
+      };
+      add({ ...todo, id: "" });
+      // createTodoMutation.mutate({
+      //   ...todo,
+      //   user_id: supabase.auth.user()?.id,
+      // });
+      setTitleTomorrow("");
     },
-    [todoTomorrow]
+    [titleTomorrow]
   );
 
   const handleSubmitAfter = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (todoAfter === "") {
+      if (titleAfter === "") {
         return;
       }
-      createTodoMutation.mutate({
-        title: todoAfter,
+      const todo = {
+        title: titleAfter,
         isDone: false,
         dueDate: "after",
-        index: todosArray.after.length,
-        user_id: supabase.auth.user()?.id,
-      });
-      setTodoAfter("");
+        index: todosArray.after?.length,
+      };
+      add({ ...todo, id: "" });
+      // createTodoMutation.mutate({
+      //   ...todo,
+      //   user_id: supabase.auth.user()?.id,
+      // });
+      setTitleAfter("");
     },
-    [todoAfter]
+    [titleAfter]
   );
 
-  const { data: todos, status } = useQueryTodos();
-  if (status === "loading") return <Spinner />;
-  if (status === "error") return <p>{"Error"}</p>;
+  // const { data: todos, status } = useQueryTodos();
+  // if (status === "loading") return <Spinner />;
+  // if (status === "error") return <p>{"Error"}</p>;
 
   // const todayTodos = todos
   //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
@@ -99,6 +112,8 @@ export const Dashboard: NextPage = (props) => {
   // const afterTodos = todos
   //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
   //   : [];
+
+  console.log(todosArray);
 
   return (
     <DndContext
@@ -116,8 +131,8 @@ export const Dashboard: NextPage = (props) => {
           }
           input={
             <InputItem
-              todo={todoToday}
-              update={setTodoToday}
+              todo={titleToday}
+              update={setTitleToday}
               handleSubmit={handleSubmitToday}
             />
           }
@@ -131,8 +146,8 @@ export const Dashboard: NextPage = (props) => {
           }
           input={
             <InputItem
-              todo={todoTomorrow}
-              update={setTodoTomorrow}
+              todo={titleTomorrow}
+              update={setTitleTomorrow}
               handleSubmit={handleSubmitTomorrow}
             />
           }
@@ -146,8 +161,8 @@ export const Dashboard: NextPage = (props) => {
           }
           input={
             <InputItem
-              todo={todoAfter}
-              update={setTodoAfter}
+              todo={titleAfter}
+              update={setTitleAfter}
               handleSubmit={handleSubmitAfter}
             />
           }

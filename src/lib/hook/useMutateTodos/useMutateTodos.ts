@@ -13,12 +13,12 @@ export const useMutateTodos = () => {
       return data;
     },
     {
-      onSuccess: (res) => {
-        const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
-        if (previousTodos) {
-          queryClient.setQueriesData(["todos"], [...previousTodos, res[0]]);
-        }
-      },
+      // onSuccess: (res) => {
+      //   const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
+      //   if (previousTodos) {
+      //     queryClient.setQueriesData(["todos"], [...previousTodos, res[0]]);
+      //   }
+      // },
       onError: (err: any) => {
         alert(err.message);
       },
@@ -35,15 +35,15 @@ export const useMutateTodos = () => {
       return data;
     },
     {
-      onSuccess: (res) => {
-        const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
-        if (previousTodos) {
-          const newTodos = previousTodos.map((todo) =>
-            todo.id === res[0].id ? { ...todo, isDone: !todo.isDone } : todo
-          );
-          queryClient.setQueriesData(["todos"], newTodos);
-        }
-      },
+      // onSuccess: (res) => {
+      //   const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
+      //   if (previousTodos) {
+      //     const newTodos = previousTodos.map((todo) =>
+      //       todo.id === res[0].id ? { ...todo, isDone: !todo.isDone } : todo
+      //     );
+      //     queryClient.setQueriesData(["todos"], newTodos);
+      //   }
+      // },
       onError: (err: any) => {
         alert(err.message);
       },
@@ -76,15 +76,15 @@ export const useMutateTodos = () => {
       return data;
     },
     {
-      onSuccess: (_, variables) => {
-        const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
-        if (previousTodos) {
-          queryClient.setQueryData(
-            ["todos"],
-            previousTodos.filter((todo) => todo.id !== variables)
-          );
-        }
-      },
+      // onSuccess: (_, variables) => {
+      //   const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]);
+      //   if (previousTodos) {
+      //     queryClient.setQueryData(
+      //       ["todos"],
+      //       previousTodos.filter((todo) => todo.id !== variables)
+      //     );
+      //   }
+      // },
       onError: (err: any) => {
         alert(err.message);
       },
