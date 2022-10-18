@@ -30,8 +30,19 @@ export type TodosAfter = {
 
 export type Todos = TodosToday & TodosTomorrow & TodosAfter;
 
+export type EditingTodos = EditingTodo[] | undefined;
+
 export type Array = {
-  todosArray: EditingTodo[];
+  todosArray: {
+    today: EditingTodos;
+    tomorrow: EditingTodos;
+    after: EditingTodos;
+  };
+  moveTodo: (payload: {
+    today: EditingTodo[];
+    tomorrow: EditingTodo[];
+    after: EditingTodo[];
+  }) => void;
   addTodo: (todo: EditingTodo) => void;
   deleteTodo: (id: string) => void;
   toggleTodo: (id: string) => void;

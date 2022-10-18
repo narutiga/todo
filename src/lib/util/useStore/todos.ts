@@ -1,4 +1,4 @@
-import { State, Todos } from "src/lib/hook/useStore/type";
+import { State, Todos } from "src/lib/util/useStore/type";
 import { StateCreator } from "zustand";
 
 // , ["zustand/immer", never]
