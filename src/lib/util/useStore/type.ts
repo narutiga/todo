@@ -4,7 +4,7 @@ export type Todo = {
   title: string;
   isDone: boolean;
   dueDate: string;
-  index?: number;
+  index: number;
   user_id: string | undefined;
 };
 
@@ -25,7 +25,7 @@ export type Array = {
 
   addTodo: (todo: EditingTodo) => void;
 
-  deleteTodo: (id: string) => void;
+  deleteTodo: (todo: EditingTodo) => void;
 
   toggleTodo: (id: string) => void;
 };
