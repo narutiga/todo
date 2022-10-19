@@ -47,7 +47,10 @@ export const createArraySlice: StateCreator<
       return {
         todosArray: {
           ...state.todosArray,
-          [todo.dueDate]: [...state.todosArray[todo.dueDate], todo],
+          [todo.dueDate]: [
+            ...state.todosArray[todo.dueDate as keyof typeof mockData],
+            todo,
+          ],
         },
       };
     });
