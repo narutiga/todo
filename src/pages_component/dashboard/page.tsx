@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from "uuid";
 /** @package */
 export const Dashboard: NextPage = (props) => {
   const { todosArray } = useStore();
+  const move = useStore((state) => state.moveTodo);
   const add = useStore((state) => state.addTodo);
   const { handleDragEnd, handleDragOver } = useDndTodos(todosArray);
   const [titleToday, setTitleToday] = useInputState("");
@@ -33,6 +34,32 @@ export const Dashboard: NextPage = (props) => {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  // useEffect(() => {
+  //   newTodos
+  //     ? move(newTodos)
+  //     : move({
+  //         today: [],
+  //         tomorrow: [],
+  //         after: [],
+  //       });
+  // }, []);
+
+  // const { data: todos, status } = useQueryTodos();
+  // if (status === "loading") return <Spinner />;
+  // if (status === "error") return <p>{"Error"}</p>;
+
+  // const newTodos = {
+  //   today: todos
+  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
+  //     : [],
+  //   tomorrow: todos
+  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
+  //     : [],
+  //   after: todos
+  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
+  //     : [],
+  // };
 
   const handleSubmitToday = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -102,20 +129,6 @@ export const Dashboard: NextPage = (props) => {
     },
     [titleAfter]
   );
-
-  // const { data: todos, status } = useQueryTodos();
-  // if (status === "loading") return <Spinner />;
-  // if (status === "error") return <p>{"Error"}</p>;
-
-  // const todayTodos = todos
-  //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
-  //   : [];
-  // const tomorrowTodos = todos
-  //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
-  //   : [];
-  // const afterTodos = todos
-  //   ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
-  //   : [];
 
   return (
     <DndContext

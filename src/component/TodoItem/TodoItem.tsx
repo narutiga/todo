@@ -9,6 +9,7 @@ import { useStore } from "src/lib/util/useStore";
 export const TodoItem = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
   const toggle = useStore((state) => state.toggleTodo);
+  const trash = useStore((state) => state.deleteTodo);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.todo.id });
   const style = {
@@ -52,7 +53,9 @@ export const TodoItem = (props: any) => {
         <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
         <IconTrash
           className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
-          onClick={() => deleteTodoMutation.mutate(props.todo.id)}
+          onClick={() => {
+            trash(props.todo), deleteTodoMutation.mutate(props.todo.id);
+          }}
         />
       </div>
     </li>

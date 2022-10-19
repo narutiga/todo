@@ -1,3 +1,4 @@
+import { removeAtIndex } from "src/lib/util/dnd_sortable";
 import { Array, State } from "src/lib/util/useStore/type";
 import { StateCreator } from "zustand";
 
@@ -56,9 +57,17 @@ export const createArraySlice: StateCreator<
     });
   },
 
-  deleteTodo: (id) => {
+  deleteTodo: (todo) => {
     set((state) => {
-      return {};
+      return {
+        todosArray: {
+          ...state.todosArray,
+          [todo.dueDate]: removeAtIndex(
+            state.todosArray[todo.dueDate as keyof typeof mockData],
+            todo.index
+          ),
+        },
+      };
     });
   },
 
