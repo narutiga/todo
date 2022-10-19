@@ -3,10 +3,12 @@ import { CSS } from "@dnd-kit/utilities";
 import { Checkbox } from "@mantine/core";
 import { IconCopy, IconTrash } from "@tabler/icons";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
+import { useStore } from "src/lib/util/useStore";
 
 /** @package */
 export const TodoItem = (props: any) => {
   const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
+  const toggle = useStore((state) => state.toggleTodo);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.todo.id });
   const style = {
@@ -30,12 +32,13 @@ export const TodoItem = (props: any) => {
           id={props.todo.id}
           color={props.color}
           checked={props.todo.isDone}
-          onChange={() =>
+          onChange={() => {
+            toggle(props.todo.id);
             completeTodoMutation.mutate({
               id: props.todo.id,
               isDone: props.todo.isDone,
-            })
-          }
+            });
+          }}
         />
         <label
           className={`text-lg ${
