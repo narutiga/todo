@@ -64,7 +64,20 @@ export const createArraySlice: StateCreator<
 
   toggleTodo: (id) => {
     set((state) => {
-      return {};
+      return {
+        todosArray: {
+          ...state.todosArray,
+          today: state.todosArray.today.map((todo) =>
+            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+          ),
+          tomorrow: state.todosArray.tomorrow.map((todo) =>
+            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+          ),
+          after: state.todosArray.after.map((todo) =>
+            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+          ),
+        },
+      };
     });
   },
 });
