@@ -4,7 +4,7 @@ import { StateCreator } from "zustand";
 
 // , ["zustand/immer", never]
 
-const mockData = {
+export const mockData = {
   today: [],
   tomorrow: [],
   after: [],

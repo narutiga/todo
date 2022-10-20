@@ -4,9 +4,11 @@ import { Checkbox } from "@mantine/core";
 import { IconCopy, IconTrash } from "@tabler/icons";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useStore } from "src/lib/util/useStore";
+import { mockData } from "src/lib/util/useStore/todoArray";
 
 /** @package */
 export const TodoItem = (props: any) => {
+  const { todosArray } = useStore();
   const { completeTodoMutation, deleteTodoMutation, moveTodoMutation } =
     useMutateTodos();
   const toggle = useStore((state) => state.toggleTodo);
@@ -16,6 +18,12 @@ export const TodoItem = (props: any) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+  const handleDelete = () => {
+    trash(props.todo.id), deleteTodoMutation.mutate(props.todo.id);
+    todosArray[props.todo.dueDate as keyof typeof mockData].map((item, index) =>
+      moveTodoMutation.mutate({ id: item.id, index: index })
+    );
   };
 
   return (
@@ -54,9 +62,7 @@ export const TodoItem = (props: any) => {
         <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
         <IconTrash
           className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
-          onClick={() => {
-            trash(props.todo.id), deleteTodoMutation.mutate(props.todo.id);
-          }}
+          onClick={handleDelete}
         />
       </div>
     </li>
