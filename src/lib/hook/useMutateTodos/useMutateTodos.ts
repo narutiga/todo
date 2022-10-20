@@ -67,10 +67,27 @@ export const useMutateTodos = () => {
     }
   );
 
+  const moveTodoMutation = useMutation(
+    async (todo: { id: string; index: number }) => {
+      const { data, error } = await supabase
+        .from("todos")
+        .update({ index: todo.index })
+        .eq("id", todo.id);
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    {
+      onError: (err: any) => {
+        alert(err.message);
+      },
+    }
+  );
+
   return {
     createTodoMutation,
     completeTodoMutation,
     updateTodoMutation,
     deleteTodoMutation,
+    moveTodoMutation,
   };
 };

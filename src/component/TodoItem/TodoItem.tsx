@@ -7,7 +7,8 @@ import { useStore } from "src/lib/util/useStore";
 
 /** @package */
 export const TodoItem = (props: any) => {
-  const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
+  const { completeTodoMutation, deleteTodoMutation, moveTodoMutation } =
+    useMutateTodos();
   const toggle = useStore((state) => state.toggleTodo);
   const trash = useStore((state) => state.deleteTodo);
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -54,7 +55,7 @@ export const TodoItem = (props: any) => {
         <IconTrash
           className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
           onClick={() => {
-            trash(props.todo), deleteTodoMutation.mutate(props.todo.id);
+            trash(props.todo.id), deleteTodoMutation.mutate(props.todo.id);
           }}
         />
       </div>
