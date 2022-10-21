@@ -31,7 +31,7 @@ export const TodoItem = (props: any) => {
   };
 
   return (
-    <li
+    <div
       key={props.id}
       className="group mb-3 flex justify-between"
       style={style}
@@ -69,6 +69,6 @@ export const TodoItem = (props: any) => {
           onClick={handleDelete}
         />
       </div>
-    </li>
+    </div>
   );
 };

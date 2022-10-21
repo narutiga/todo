@@ -15,13 +15,13 @@ export const TodoList = (props: any) => {
         items={props.todos}
         strategy={rectSortingStrategy}
       >
-        <ul className="list-none p-0" ref={setNodeRef}>
+        <div className="list-none p-0" ref={setNodeRef}>
           {props.todos.map((todo: Todo) => (
             <TodoItem key={todo.id} color={props.color} todo={todo} />
           ))}
-          {props.input}
-        </ul>
+        </div>
       </SortableContext>
+      {props.input}
     </div>
   );
 };

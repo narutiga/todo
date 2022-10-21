@@ -13,7 +13,7 @@ export const Layout: CustomLayout = (page) => {
       <header>
         <div className="flex justify-between align-middle">
           <p className="ml-36 text-3xl md:text-4xl font-bold">
-            Oin<span className="text-rose-500"> Todo</span>
+            Qin<span className="text-rose-500"> Todo</span>
           </p>
           <IconLogout
             className="my-auto mr-8 mb:mr-16 h-6 w-6 cursor-pointer text-rose-500 "
