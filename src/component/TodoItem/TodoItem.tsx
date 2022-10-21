@@ -4,10 +4,13 @@ import { Checkbox } from "@mantine/core";
 import { IconCopy, IconTrash } from "@tabler/icons";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useStore } from "src/lib/util/useStore";
+import { mockData } from "src/lib/util/useStore/todoArray";
 
 /** @package */
 export const TodoItem = (props: any) => {
-  const { completeTodoMutation, deleteTodoMutation } = useMutateTodos();
+  const { todosArray } = useStore();
+  const { completeTodoMutation, deleteTodoMutation, moveTodoMutation } =
+    useMutateTodos();
   const toggle = useStore((state) => state.toggleTodo);
   const trash = useStore((state) => state.deleteTodo);
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -16,9 +19,19 @@ export const TodoItem = (props: any) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const handleDelete = () => {
+    const newArray = todosArray[
+      props.todo.dueDate as keyof typeof mockData
+    ].filter((todo) => todo.id !== props.todo.id);
+    trash(props.todo.id);
+    deleteTodoMutation.mutate(props.todo.id);
+    newArray.map((item, index) =>
+      moveTodoMutation.mutate({ id: item.id, index: index })
+    );
+  };
 
   return (
-    <li
+    <div
       key={props.id}
       className="group mb-3 flex justify-between"
       style={style}
@@ -53,11 +66,9 @@ export const TodoItem = (props: any) => {
         <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
         <IconTrash
           className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
-          onClick={() => {
-            trash(props.todo), deleteTodoMutation.mutate(props.todo.id);
-          }}
+          onClick={handleDelete}
         />
       </div>
-    </li>
+    </div>
   );
 };

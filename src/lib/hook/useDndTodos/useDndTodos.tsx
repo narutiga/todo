@@ -2,10 +2,12 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { useStore } from "src/lib/util/useStore";
 import { insertAtIndex, removeAtIndex } from "src/lib/util/dnd_sortable";
 import { DragEndEvent, DragOverEvent } from "@dnd-kit/core";
+import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 
 /** @package */
 export const useDndTodos = (todos: any) => {
   const move = useStore((state) => state.moveTodo);
+  const { moveTodoMutation } = useMutateTodos();
 
   const handleDragOver = ({ over, active }: DragOverEvent) => {
     const overId = over?.id;
@@ -59,6 +61,9 @@ export const useDndTodos = (todos: any) => {
             overIndex
           ),
         };
+        newTodos[overContainer].map((item: any, index: number) =>
+          moveTodoMutation.mutate({ id: item.id, index: index })
+        );
       } else {
         newTodos = moveBetweenContainers(
           todos,
@@ -68,8 +73,14 @@ export const useDndTodos = (todos: any) => {
           overIndex,
           todos[activeContainer][activeIndex]
         );
+        // うまくいってない。あと、indexだけじゃなくて動かしたアイテムのdueDateも変えないと
+        // newTodos[activeContainer].map((item: any, index: number) =>
+        //   moveTodoMutation.mutate({ id: item.id, index: index })
+        // );
+        newTodos[overContainer].map((item: any, index: number) =>
+          moveTodoMutation.mutate({ id: item.id, index: index })
+        );
       }
-
       move(newTodos);
     }
   };

@@ -36,7 +36,7 @@ const App: CustomAppPage = ({ Component, pageProps }) => {
   });
   useEffect(() => {
     validateSession();
-  });
+  }, []);
 
   const getLayout =
     Component.getLayout ||
