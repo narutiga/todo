@@ -20,8 +20,12 @@ export const TodoItem = (props: any) => {
     transition,
   };
   const handleDelete = () => {
-    trash(props.todo.id), deleteTodoMutation.mutate(props.todo.id);
-    todosArray[props.todo.dueDate as keyof typeof mockData].map((item, index) =>
+    const newArray = todosArray[
+      props.todo.dueDate as keyof typeof mockData
+    ].filter((todo) => todo.id !== props.todo.id);
+    trash(props.todo.id);
+    deleteTodoMutation.mutate(props.todo.id);
+    newArray.map((item, index) =>
       moveTodoMutation.mutate({ id: item.id, index: index })
     );
   };

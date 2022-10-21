@@ -1,4 +1,3 @@
-import { removeAtIndex } from "src/lib/util/dnd_sortable";
 import { Array, State } from "src/lib/util/useStore/type";
 import { StateCreator } from "zustand";
 

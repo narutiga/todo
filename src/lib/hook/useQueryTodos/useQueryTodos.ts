@@ -8,7 +8,7 @@ export const useQueryTodos = () => {
     const { data, error } = await supabase
       .from("todos")
       .select("*")
-      .order("created_at", { ascending: true });
+      .order("index", { ascending: true });
     if (error) {
       throw new Error(error.message);
     }

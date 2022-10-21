@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { FormEvent, useCallback, useEffect } from "react";
+import { FormEvent, useCallback, useEffect, useMemo } from "react";
 import { useInputState } from "@mantine/hooks";
 import { supabase } from "src/lib/util/supabase";
 import { useQueryTodos } from "src/lib/hook/useQueryTodos";
@@ -34,32 +34,6 @@ export const Dashboard: NextPage = (props) => {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
-
-  // useEffect(() => {
-  //   newTodos
-  //     ? move(newTodos)
-  //     : move({
-  //         today: [],
-  //         tomorrow: [],
-  //         after: [],
-  //       });
-  // }, []);
-
-  // const { data: todos, status } = useQueryTodos();
-  // if (status === "loading") return <Spinner />;
-  // if (status === "error") return <p>{"Error"}</p>;
-
-  // const newTodos = {
-  //   today: todos
-  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
-  //     : [],
-  //   tomorrow: todos
-  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
-  //     : [],
-  //   after: todos
-  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
-  //     : [],
-  // };
 
   const handleSubmitToday = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -129,6 +103,26 @@ export const Dashboard: NextPage = (props) => {
     },
     [titleAfter]
   );
+
+  // const { data: todos, status } = useQueryTodos();
+  // if (status === "loading") return <Spinner />;
+  // if (status === "error") return <p>{"Error"}</p>;
+
+  // const newTodos = {
+  //   today: todos
+  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
+  //     : [],
+  //   tomorrow: todos
+  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
+  //     : [],
+  //   after: todos
+  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
+  //     : [],
+  // };
+
+  // useCallback(() => {
+  //   move(newTodos);
+  // }, []);
 
   return (
     <DndContext
