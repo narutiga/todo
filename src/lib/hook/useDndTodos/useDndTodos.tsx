@@ -7,7 +7,7 @@ import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 /** @package */
 export const useDndTodos = (todos: any) => {
   const move = useStore((state) => state.moveTodo);
-  const { moveTodoMutation } = useMutateTodos();
+  const { soartTodoMutation, moveTodoMutation } = useMutateTodos();
 
   const handleDragOver = ({ over, active }: DragOverEvent) => {
     const overId = over?.id;
@@ -62,7 +62,7 @@ export const useDndTodos = (todos: any) => {
           ),
         };
         newTodos[overContainer].map((item: any, index: number) =>
-          moveTodoMutation.mutate({ id: item.id, index: index })
+          soartTodoMutation.mutate({ id: item.id, index: index })
         );
       } else {
         newTodos = moveBetweenContainers(
@@ -78,7 +78,7 @@ export const useDndTodos = (todos: any) => {
         //   moveTodoMutation.mutate({ id: item.id, index: index })
         // );
         newTodos[overContainer].map((item: any, index: number) =>
-          moveTodoMutation.mutate({ id: item.id, index: index })
+          soartTodoMutation.mutate({ id: item.id, index: index })
         );
       }
       move(newTodos);
