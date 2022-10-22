@@ -67,11 +67,27 @@ export const useMutateTodos = () => {
     }
   );
 
-  const moveTodoMutation = useMutation(
+  const soartTodoMutation = useMutation(
     async (todo: { id: string; index: number }) => {
       const { data, error } = await supabase
         .from("todos")
         .update({ index: todo.index })
+        .eq("id", todo.id);
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    {
+      onError: (err: any) => {
+        alert(err.message);
+      },
+    }
+  );
+
+  const moveTodoMutation = useMutation(
+    async (todo: { id: string; dueDate: string }) => {
+      const { data, error } = await supabase
+        .from("todos")
+        .update({ dueDate: todo.dueDate })
         .eq("id", todo.id);
       if (error) throw new Error(error.message);
       return data;
@@ -88,6 +104,7 @@ export const useMutateTodos = () => {
     completeTodoMutation,
     updateTodoMutation,
     deleteTodoMutation,
+    soartTodoMutation,
     moveTodoMutation,
   };
 };
