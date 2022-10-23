@@ -39,7 +39,7 @@ export const TodoItem = (props: any) => {
       {...attributes}
       {...listeners}
     >
-      <div className="flex">
+      <div className="flex touch-none">
         <Checkbox
           radius="xl"
           className="mt-1 mr-2"
