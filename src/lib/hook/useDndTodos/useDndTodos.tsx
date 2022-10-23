@@ -3,6 +3,7 @@ import { useStore } from "src/lib/util/useStore";
 import { insertAtIndex, removeAtIndex } from "src/lib/util/dnd_sortable";
 import { DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
+import { EditingTodo } from "src/lib/util/useStore/type";
 
 /** @package */
 export const useDndTodos = (todos: any) => {
@@ -35,7 +36,13 @@ export const useDndTodos = (todos: any) => {
         overIndex,
         todos[activeContainer][activeIndex]
       );
-
+      newTodos[activeContainer].map((item: EditingTodo, index: number) =>
+        soartTodoMutation.mutate({ id: item.id, index: index })
+      );
+      moveTodoMutation.mutate({
+        id: todos[activeContainer][activeIndex].id,
+        dueDate: overContainer,
+      });
       move(newTodos);
     }
   };
@@ -61,7 +68,7 @@ export const useDndTodos = (todos: any) => {
             overIndex
           ),
         };
-        newTodos[overContainer].map((item: any, index: number) =>
+        newTodos[overContainer].map((item: EditingTodo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
       } else {
@@ -73,11 +80,7 @@ export const useDndTodos = (todos: any) => {
           overIndex,
           todos[activeContainer][activeIndex]
         );
-        // うまくいってない。あと、indexだけじゃなくて動かしたアイテムのdueDateも変えないと
-        // newTodos[activeContainer].map((item: any, index: number) =>
-        //   moveTodoMutation.mutate({ id: item.id, index: index })
-        // );
-        newTodos[overContainer].map((item: any, index: number) =>
+        newTodos[overContainer].map((item: EditingTodo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
       }

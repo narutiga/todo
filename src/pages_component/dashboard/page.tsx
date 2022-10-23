@@ -34,6 +34,25 @@ export const Dashboard: NextPage = (props) => {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+  const { data: todos, status } = useQueryTodos();
+  // if (status === "loading") return <Spinner />;
+  // if (status === "error") return <p>{"Error"}</p>;
+
+  const newTodos = {
+    today: todos
+      ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
+      : [],
+    tomorrow: todos
+      ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
+      : [],
+    after: todos
+      ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
+      : [],
+  };
+
+  useEffect(() => {
+    move(newTodos);
+  }, [todos]);
 
   const handleSubmitToday = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -103,26 +122,6 @@ export const Dashboard: NextPage = (props) => {
     },
     [titleAfter]
   );
-
-  // const { data: todos, status } = useQueryTodos();
-  // if (status === "loading") return <Spinner />;
-  // if (status === "error") return <p>{"Error"}</p>;
-
-  // const newTodos = {
-  //   today: todos
-  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
-  //     : [],
-  //   tomorrow: todos
-  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
-  //     : [],
-  //   after: todos
-  //     ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
-  //     : [],
-  // };
-
-  // useCallback(() => {
-  //   move(newTodos);
-  // }, []);
 
   return (
     <DndContext

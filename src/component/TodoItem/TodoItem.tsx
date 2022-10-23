@@ -9,12 +9,8 @@ import { mockData } from "src/lib/util/useStore/todoArray";
 /** @package */
 export const TodoItem = (props: any) => {
   const { todosArray } = useStore();
-  const {
-    completeTodoMutation,
-    deleteTodoMutation,
-    soartTodoMutation,
-    moveTodoMutation,
-  } = useMutateTodos();
+  const { completeTodoMutation, deleteTodoMutation, soartTodoMutation } =
+    useMutateTodos();
   const toggle = useStore((state) => state.toggleTodo);
   const trash = useStore((state) => state.deleteTodo);
   const { attributes, listeners, setNodeRef, transform, transition } =
