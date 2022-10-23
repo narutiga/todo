@@ -36,7 +36,13 @@ export const useDndTodos = (todos: any) => {
         overIndex,
         todos[activeContainer][activeIndex]
       );
-
+      newTodos[activeContainer].map((item: EditingTodo, index: number) =>
+        soartTodoMutation.mutate({ id: item.id, index: index })
+      );
+      moveTodoMutation.mutate({
+        id: todos[activeContainer][activeIndex].id,
+        dueDate: overContainer,
+      });
       move(newTodos);
     }
   };
@@ -77,15 +83,6 @@ export const useDndTodos = (todos: any) => {
         newTodos[overContainer].map((item: EditingTodo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
-        // 元の配列のindex書き換え
-        newTodos[activeContainer].map((item: EditingTodo, index: number) =>
-          soartTodoMutation.mutate({ id: item.id, index: index })
-        );
-        // dueDate書き換え
-        moveTodoMutation.mutate({
-          id: todos[activeContainer][activeIndex].id,
-          dueDate: overContainer,
-        });
       }
       move(newTodos);
     }
