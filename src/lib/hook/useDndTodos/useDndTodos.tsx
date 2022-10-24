@@ -83,6 +83,13 @@ export const useDndTodos = (todos: any) => {
         newTodos[overContainer].map((item: EditingTodo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
+        newTodos[activeContainer].map((item: EditingTodo, index: number) =>
+          soartTodoMutation.mutate({ id: item.id, index: index })
+        );
+        moveTodoMutation.mutate({
+          id: todos[activeContainer][activeIndex].id,
+          dueDate: overContainer,
+        });
       }
       move(newTodos);
     }

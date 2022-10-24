@@ -18,7 +18,7 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useStore } from "src/lib/util/useStore";
 import { useDndTodos } from "src/lib/hook/useDndTodos";
-import { EditingTodo } from "src/lib/util/useStore/type";
+import { EditingTodo, Todo } from "src/lib/util/useStore/type";
 import { v4 as uuidv4 } from "uuid";
 
 /** @package */
@@ -48,15 +48,11 @@ export const Dashboard: NextPage = (props) => {
   // if (status === "error") return <p>{"Error"}</p>;
 
   const newTodos = {
-    today: todos
-      ? todos.filter((todo: EditingTodo) => todo.dueDate === "today")
-      : [],
+    today: todos ? todos.filter((todo: Todo) => todo.dueDate === "today") : [],
     tomorrow: todos
-      ? todos.filter((todo: EditingTodo) => todo.dueDate === "tomorrow")
+      ? todos.filter((todo: Todo) => todo.dueDate === "tomorrow")
       : [],
-    after: todos
-      ? todos.filter((todo: EditingTodo) => todo.dueDate === "after")
-      : [],
+    after: todos ? todos.filter((todo: Todo) => todo.dueDate === "after") : [],
   };
 
   useEffect(() => {

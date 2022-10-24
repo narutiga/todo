@@ -12,15 +12,15 @@ export type EditingTodo = Omit<Todo, "created_at" | "user_id">;
 
 export type Array = {
   todosArray: {
-    today: EditingTodo[];
-    tomorrow: EditingTodo[];
-    after: EditingTodo[];
+    today: Todo[];
+    tomorrow: Todo[];
+    after: Todo[];
   };
 
   moveTodo: (payload: {
-    today: EditingTodo[];
-    tomorrow: EditingTodo[];
-    after: EditingTodo[];
+    today: Todo[];
+    tomorrow: Todo[];
+    after: Todo[];
   }) => void;
 
   addTodo: (todo: EditingTodo) => void;
