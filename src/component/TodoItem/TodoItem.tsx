@@ -5,9 +5,10 @@ import { IconCopy, IconTrash } from "@tabler/icons";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useStore } from "src/lib/util/useStore";
 import { mockData } from "src/lib/util/useStore/todoArray";
+import { Todo } from "src/lib/util/useStore/type";
 
 /** @package */
-export const TodoItem = (props: any) => {
+export const TodoItem = (props: { color: string; todo: Todo }) => {
   const { todosArray } = useStore();
   const { completeTodoMutation, deleteTodoMutation, soartTodoMutation } =
     useMutateTodos();
@@ -32,7 +33,7 @@ export const TodoItem = (props: any) => {
 
   return (
     <div
-      key={props.id}
+      key={props.todo.id}
       className="group mb-3 flex justify-between"
       style={style}
       ref={setNodeRef}
