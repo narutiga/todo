@@ -1,38 +1,36 @@
 import { useState, FormEvent } from "react";
 import type { NextPage } from "next";
 import { useMutateAuth } from "src/lib/hook/useMutateAuth";
-import { IconCrown } from "@tabler/icons";
 
 /** @package */
 export const Auth: NextPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isSignin, setIsSignin] = useState(true);
   const {
     email,
     setEmail,
     password,
     setPassword,
-    loginMutation,
-    registerMutation,
+    signInMutation,
+    signUpMutation,
   } = useMutateAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isLogin) {
-      loginMutation.mutate();
+    if (isSignin) {
+      signInMutation.mutate();
     } else {
-      registerMutation.mutate();
+      signUpMutation.mutate();
     }
   };
 
   return (
-    <div>
-      <IconCrown className="h-12 w-12 text-orange-400" />
+    <div className="flex w-screen flex-1 flex-col items-center justify-center">
       <form onSubmit={handleSubmit}>
         <div>
           <input
             type="text"
             required
-            className="my-2 rounded border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-orange-400 focus:outline-none"
+            className="mb-4 rounded border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-rose-400 focus:outline-none"
             placeholder="Email"
             value={email}
             onChange={(e) => {
@@ -44,7 +42,7 @@ export const Auth: NextPage = () => {
           <input
             type="password"
             required
-            className="my-2 rounded border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-orange-400 focus:outline-none"
+            className="mb-6 rounded border border-gray-300 px-3 py-2 text-sm placeholder-gray-500 focus:border-rose-400 focus:outline-none"
             placeholder="Password"
             value={password}
             onChange={(e) => {
@@ -54,15 +52,15 @@ export const Auth: NextPage = () => {
         </div>
         <button
           type="submit"
-          className="mr-auto ml-auto group relative flex justify-center rounded-full bg-orange-300 py-2 px-4 text-sm font-medium text-gray-600 hover:bg-orange-200"
+          className="mb-6 mr-auto ml-auto group relative flex justify-center rounded-full bg-rose-300 py-2 px-4 text-sm font-medium text-gray-600 hover:bg-rose-300"
         >
-          {isLogin ? "Sing In" : "Sing Up"}
+          {isSignin ? "Sing In" : "Sing Up"}
         </button>
         <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="cursor-pointer font-medium border-none outline-none bg-transparent text-gray-300 hover:text-orange-300 underline"
+          onClick={() => setIsSignin(!isSignin)}
+          className="mr-auto ml-auto relative flex justify-center cursor-pointer font-medium border-none outline-none bg-transparent text-rose-500 hover:text-rose-300 underline"
         >
-          change mode ?
+          {isSignin ? "Sign Up ?" : "Sign In ?"}
         </button>
       </form>
     </div>
