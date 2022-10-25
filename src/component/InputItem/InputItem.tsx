@@ -7,7 +7,7 @@ export const InputItem = (props: any) => {
       <form action="" method="" onSubmit={props.handleSubmit}>
         <IconCirclePlus className="mr-1 text-gray-400 align-middle" />
         <input
-          className="border-none focus:outline-none align-middle"
+          className={`border-none focus:outline-none align-middle ${props.caret}`}
           type="text"
           placeholder="タスクを追加する"
           value={props.todo}

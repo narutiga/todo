@@ -144,6 +144,7 @@ export const Dashboard: NextPage = (props) => {
           }
           input={
             <InputItem
+              caret="caret-rose-500"
               todo={titleToday}
               update={setTitleToday}
               handleSubmit={handleSubmitToday}
@@ -159,6 +160,7 @@ export const Dashboard: NextPage = (props) => {
           }
           input={
             <InputItem
+              caret="caret-orange-400"
               todo={titleTomorrow}
               update={setTitleTomorrow}
               handleSubmit={handleSubmitTomorrow}
@@ -174,6 +176,7 @@ export const Dashboard: NextPage = (props) => {
           }
           input={
             <InputItem
+              caret="caret-yellow-400"
               todo={titleAfter}
               update={setTitleAfter}
               handleSubmit={handleSubmitAfter}
