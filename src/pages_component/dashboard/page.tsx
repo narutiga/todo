@@ -18,7 +18,7 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useStore } from "src/lib/util/useStore";
 import { useDndTodos } from "src/lib/hook/useDndTodos";
-import { EditingTodo, Todo } from "src/lib/util/useStore/type";
+import { Todo } from "src/lib/util/useStore/type";
 import { v4 as uuidv4 } from "uuid";
 
 /** @package */
