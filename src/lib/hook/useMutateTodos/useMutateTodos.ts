@@ -36,7 +36,7 @@ export const useMutateTodos = () => {
   );
 
   const updateTodoMutation = useMutation(
-    async (todo: EditingTodo) => {
+    async (todo: Todo) => {
       const { data, error } = await supabase
         .from("todos")
         .update({ title: todo.title })
