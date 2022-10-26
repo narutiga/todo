@@ -25,9 +25,9 @@ export type Array = {
 
   addTodo: (todo: EditingTodo) => void;
 
-  deleteTodo: (id: string) => void;
+  deleteTodo: (todo: Todo) => void;
 
-  toggleTodo: (id: string) => void;
+  toggleTodo: (todo: Todo) => void;
 };
 
 export type State = Array;

@@ -41,34 +41,28 @@ export const createArraySlice: StateCreator<
     });
   },
 
-  deleteTodo: (id) => {
+  deleteTodo: (todo) => {
     set((state) => {
       return {
         todosArray: {
           ...state.todosArray,
-          today: state.todosArray["today"].filter((todo) => todo.id !== id),
-          tomorrow: state.todosArray["tomorrow"].filter(
-            (todo) => todo.id !== id
-          ),
-          after: state.todosArray["after"].filter((todo) => todo.id !== id),
+          [todo.dueDate]: state.todosArray[
+            todo.dueDate as keyof typeof mockData
+          ].filter((item) => item.id !== todo.id),
         },
       };
     });
   },
 
-  toggleTodo: (id) => {
+  toggleTodo: (todo) => {
     set((state) => {
       return {
         todosArray: {
           ...state.todosArray,
-          today: state.todosArray.today.map((todo) =>
-            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
-          ),
-          tomorrow: state.todosArray.tomorrow.map((todo) =>
-            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
-          ),
-          after: state.todosArray.after.map((todo) =>
-            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+          [todo.dueDate]: state.todosArray[
+            todo.dueDate as keyof typeof mockData
+          ].map((item) =>
+            item.id === todo.id ? { ...item, isDone: !todo.isDone } : item
           ),
         },
       };
