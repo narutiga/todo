@@ -3,7 +3,7 @@ import { useStore } from "src/lib/util/useStore";
 import { insertAtIndex, removeAtIndex } from "src/lib/util/dnd_sortable";
 import { DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { useMutateTodos } from "src/lib/hook/useMutateTodos";
-import { EditingTodo } from "src/lib/util/useStore/type";
+import { EditingTodo, Todo } from "src/lib/util/useStore/type";
 
 /** @package */
 export const useDndTodos = (todos: any) => {
@@ -68,7 +68,7 @@ export const useDndTodos = (todos: any) => {
             overIndex
           ),
         };
-        newTodos[overContainer].map((item: EditingTodo, index: number) =>
+        newTodos[overContainer].map((item: Todo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
       } else {
@@ -80,7 +80,7 @@ export const useDndTodos = (todos: any) => {
           overIndex,
           todos[activeContainer][activeIndex]
         );
-        newTodos[overContainer].map((item: EditingTodo, index: number) =>
+        newTodos[overContainer].map((item: Todo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
         newTodos[activeContainer].map((item: EditingTodo, index: number) =>
@@ -97,11 +97,11 @@ export const useDndTodos = (todos: any) => {
 
   const moveBetweenContainers = (
     todos: any,
-    activeContainer: any,
-    activeIndex: any,
-    overContainer: any,
-    overIndex: any,
-    item: any
+    activeContainer: string,
+    activeIndex: number,
+    overContainer: string,
+    overIndex: number,
+    item: Todo
   ) => {
     return {
       ...todos,
