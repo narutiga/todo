@@ -36,13 +36,14 @@ export const useDndTodos = (todos: any) => {
         overIndex,
         todos[activeContainer][activeIndex]
       );
-      newTodos[activeContainer].map((item: EditingTodo, index: number) =>
-        soartTodoMutation.mutate({ id: item.id, index: index })
-      );
       moveTodoMutation.mutate({
         id: todos[activeContainer][activeIndex].id,
         dueDate: overContainer,
       });
+      newTodos[activeContainer].map((item: EditingTodo, index: number) =>
+        soartTodoMutation.mutate({ id: item.id, index: index })
+      );
+
       move(newTodos);
     }
   };
@@ -57,8 +58,8 @@ export const useDndTodos = (todos: any) => {
       const overContainer = over.data.current?.sortable.containerId || over.id;
       const activeIndex = active.data.current?.sortable.index;
       const overIndex = over.data.current?.sortable.index || 0;
-
       let newTodos;
+
       if (activeContainer === overContainer) {
         newTodos = {
           ...todos,
@@ -80,16 +81,16 @@ export const useDndTodos = (todos: any) => {
           overIndex,
           todos[activeContainer][activeIndex]
         );
+        moveTodoMutation.mutate({
+          id: todos[overContainer][overIndex].id,
+          dueDate: overContainer,
+        });
         newTodos[overContainer].map((item: Todo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
         newTodos[activeContainer].map((item: EditingTodo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
-        moveTodoMutation.mutate({
-          id: todos[activeContainer][activeIndex].id,
-          dueDate: overContainer,
-        });
       }
       move(newTodos);
     }

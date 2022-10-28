@@ -56,12 +56,12 @@ export const Auth: NextPage = () => {
         >
           {isSignin ? "Sing In" : "Sing Up"}
         </button>
-        <button
+        <p
           onClick={() => setIsSignin(!isSignin)}
           className="mr-auto ml-auto relative flex justify-center cursor-pointer font-medium border-none outline-none bg-transparent text-rose-500 hover:text-rose-300 underline"
         >
           {isSignin ? "Sign Up ?" : "Sign In ?"}
-        </button>
+        </p>
       </form>
     </div>
   );
