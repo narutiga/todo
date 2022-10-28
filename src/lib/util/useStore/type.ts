@@ -28,6 +28,8 @@ export type Array = {
   deleteTodo: (todo: Todo) => void;
 
   toggleTodo: (todo: Todo) => void;
+
+  copyTodo: (prevTodo: Todo, newTodo: Todo) => void;
 };
 
 export type State = Array;

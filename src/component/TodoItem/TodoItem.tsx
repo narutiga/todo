@@ -5,18 +5,24 @@ import { useMutateTodos } from "src/lib/hook/useMutateTodos";
 import { useStore } from "src/lib/util/useStore";
 import { mockData } from "src/lib/util/useStore/todoArray";
 import { Todo } from "src/lib/util/useStore/type";
+import { v4 as uuidv4 } from "uuid";
 import { Checkbox } from "@mantine/core";
 import { IconCopy, IconTrash } from "@tabler/icons";
 
 /** @package */
 export const TodoItem = (props: { color: string; todo: Todo }) => {
   const [title, setTile] = useState(props.todo.title);
-  const { updateTodoMutation } = useMutateTodos();
+  const {
+    createTodoMutation,
+    updateTodoMutation,
+    completeTodoMutation,
+    deleteTodoMutation,
+    soartTodoMutation,
+  } = useMutateTodos();
   const { todosArray } = useStore();
-  const { completeTodoMutation, deleteTodoMutation, soartTodoMutation } =
-    useMutateTodos();
   const toggle = useStore((state) => state.toggleTodo);
   const trash = useStore((state) => state.deleteTodo);
+  const copy = useStore((state) => state.copyTodo);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.todo.id });
   const style = {
@@ -33,8 +39,22 @@ export const TodoItem = (props: { color: string; todo: Todo }) => {
       soartTodoMutation.mutate({ id: item.id, index: index })
     );
   };
+
+  const handleCopy = () => {
+    const copyTodo = { ...props.todo, id: uuidv4() };
+    createTodoMutation.mutate(copyTodo);
+    const previousArray =
+      todosArray[props.todo.dueDate as keyof typeof mockData];
+    const newArray = [...previousArray];
+    newArray.splice(previousArray.indexOf(props.todo), 0, copyTodo);
+    newArray.map((item, index) =>
+      soartTodoMutation.mutate({ id: item.id, index: index })
+    );
+    copy(props.todo, copyTodo);
+  };
+
   const handleSubmitTitle = useCallback(
-    (todo: any) => {
+    (todo: Todo) => {
       if (title === "") {
         return;
       }
@@ -97,7 +117,10 @@ export const TodoItem = (props: { color: string; todo: Todo }) => {
         </label> */}
       </div>
       <div className="flex">
-        <IconCopy className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100" />
+        <IconCopy
+          className="items-end h-5 w-5 mt-1 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
+          onClick={handleCopy}
+        />
         <IconTrash
           className="items-end h-5 w-5 mt-1 ml-4 cursor-pointer text-gray-400 opacity-0 group-hover:opacity-100"
           onClick={handleDelete}

@@ -68,7 +68,7 @@ export const useDndTodos = (todos: any) => {
             overIndex
           ),
         };
-        newTodos[overContainer].map((item: EditingTodo, index: number) =>
+        newTodos[overContainer].map((item: Todo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
       } else {
@@ -80,7 +80,7 @@ export const useDndTodos = (todos: any) => {
           overIndex,
           todos[activeContainer][activeIndex]
         );
-        newTodos[overContainer].map((item: EditingTodo, index: number) =>
+        newTodos[overContainer].map((item: Todo, index: number) =>
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
         newTodos[activeContainer].map((item: EditingTodo, index: number) =>
