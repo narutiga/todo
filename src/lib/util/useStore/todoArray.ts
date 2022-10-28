@@ -74,7 +74,7 @@ export const createArraySlice: StateCreator<
       const previousArray =
         state.todosArray[prevTodo.dueDate as keyof typeof mockData];
       const newArray = [...previousArray];
-      newArray.splice(previousArray.indexOf(prevTodo, 1), 0, newTodo);
+      newArray.splice(previousArray.indexOf(prevTodo) + 1, 0, newTodo);
       return {
         todosArray: {
           ...state.todosArray,
