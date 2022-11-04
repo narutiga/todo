@@ -24,7 +24,7 @@ import { v4 as uuidv4 } from "uuid";
 /** @package */
 export const Dashboard: NextPage = (props) => {
   const { todosArray } = useStore();
-  const move = useStore((state) => state.moveTodo);
+  const set = useStore((state) => state.setTodo);
   const add = useStore((state) => state.addTodo);
   const { handleDragEnd, handleDragOver } = useDndTodos(todosArray);
   const [titleToday, setTitleToday] = useInputState("");
@@ -56,20 +56,25 @@ export const Dashboard: NextPage = (props) => {
   };
 
   useEffect(() => {
-    move(newTodos);
+    set(newTodos);
   }, [todos]);
 
-  const handleSubmitToday = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+  // 動的な関数の生成
+  const handleSubmitFactory = (
+    title: string,
+    dueDate: string,
+    setTitle: any
+  ) => {
+    const handleSubmit = (e: any) => {
       e.preventDefault();
-      if (titleToday === "") {
+      if (title === "") {
         return;
       }
       const todo = {
         id: uuidv4(),
-        title: titleToday,
+        title: title,
         isDone: false,
-        dueDate: "today",
+        dueDate: dueDate,
         index: todosArray.today?.length,
       };
       add(todo);
@@ -77,55 +82,27 @@ export const Dashboard: NextPage = (props) => {
         ...todo,
         user_id: supabase.auth.user()?.id,
       });
-      setTitleToday("");
-    },
-    [titleToday]
+      setTitle("");
+    };
+    return handleSubmit;
+  };
+
+  const handleSubmitToday = handleSubmitFactory(
+    titleToday,
+    "today",
+    setTitleToday
   );
 
-  const handleSubmitTomorrow = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (titleTomorrow === "") {
-        return;
-      }
-      const todo = {
-        id: uuidv4(),
-        title: titleTomorrow,
-        isDone: false,
-        dueDate: "tomorrow",
-        index: todosArray.tomorrow?.length,
-      };
-      add(todo);
-      createTodoMutation.mutate({
-        ...todo,
-        user_id: supabase.auth.user()?.id,
-      });
-      setTitleTomorrow("");
-    },
-    [titleTomorrow]
+  const handleSubmitTomorrow = handleSubmitFactory(
+    titleTomorrow,
+    "tomorrow",
+    setTitleTomorrow
   );
 
-  const handleSubmitAfter = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (titleAfter === "") {
-        return;
-      }
-      const todo = {
-        id: uuidv4(),
-        title: titleAfter,
-        isDone: false,
-        dueDate: "after",
-        index: todosArray.after?.length,
-      };
-      add(todo);
-      createTodoMutation.mutate({
-        ...todo,
-        user_id: supabase.auth.user()?.id,
-      });
-      setTitleAfter("");
-    },
-    [titleAfter]
+  const handleSubmitAfter = handleSubmitFactory(
+    titleAfter,
+    "after",
+    setTitleAfter
   );
 
   return (

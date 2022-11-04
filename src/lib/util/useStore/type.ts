@@ -17,7 +17,7 @@ export type Array = {
     after: Todo[];
   };
 
-  moveTodo: (payload: {
+  setTodo: (payload: {
     today: Todo[];
     tomorrow: Todo[];
     after: Todo[];

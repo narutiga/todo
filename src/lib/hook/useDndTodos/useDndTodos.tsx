@@ -7,7 +7,7 @@ import { EditingTodo, Todo } from "src/lib/util/useStore/type";
 
 /** @package */
 export const useDndTodos = (todos: any) => {
-  const move = useStore((state) => state.moveTodo);
+  const set = useStore((state) => state.setTodo);
   const { soartTodoMutation, moveTodoMutation } = useMutateTodos();
 
   const handleDragOver = ({ over, active }: DragOverEvent) => {
@@ -44,7 +44,7 @@ export const useDndTodos = (todos: any) => {
         soartTodoMutation.mutate({ id: item.id, index: index })
       );
 
-      move(newTodos);
+      set(newTodos);
     }
   };
 
@@ -92,7 +92,7 @@ export const useDndTodos = (todos: any) => {
           soartTodoMutation.mutate({ id: item.id, index: index })
         );
       }
-      move(newTodos);
+      set(newTodos);
     }
   };
 
