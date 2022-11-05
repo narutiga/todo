@@ -53,7 +53,7 @@ export const TodoItem = (props: { color: string; todo: Todo }) => {
     copy(props.todo, copyTodo);
   };
 
-  const handleSubmitTitle = useCallback(
+  const handleUpdateTitle = useCallback(
     (todo: Todo) => {
       if (title === "") {
         return;
@@ -100,21 +100,13 @@ export const TodoItem = (props: { color: string; todo: Todo }) => {
           contentEditable
           onInput={handleInput}
           onBlur={() => {
-            handleSubmitTitle(props.todo);
+            handleUpdateTitle(props.todo);
           }}
           dangerouslySetInnerHTML={{ __html: defalutTitle.current }}
           className={` border-none outline-none text-lg ${
             props.todo.isDone ? "text-gray-400 line-through" : "text-gray-900"
           }`}
         />
-
-        {/* <label
-          className={`text-lg ${
-            props.todo.isDone ? "text-gray-400 line-through" : "text-gray-900"
-          }`}
-        >
-          {props.todo.title}
-        </label> */}
       </div>
       <div className="flex">
         <IconCopy

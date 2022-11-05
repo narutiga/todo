@@ -1,11 +1,9 @@
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { Todo } from "src/lib/util/useStore/type";
 import { supabase } from "src/lib/util/supabase";
 
 /** @package */
 export const useMutateTodos = () => {
-  const queryClient = useQueryClient();
-
   const createTodoMutation = useMutation(
     async (todo: Omit<Todo, "id" | "created_at">) => {
       const { data, error } = await supabase.from("todos").insert(todo);
